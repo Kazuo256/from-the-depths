@@ -33,12 +33,15 @@ function love.update(dt)
   end
 end
 
+-- Pallete: https://coolors.co/17bebb-2e282a-cd5334-edb88b-fad8d6
 function love.draw()
   local g = love.graphics
+  g.setBackgroundColor(0x2E, 0x28, 0x2A)
   for _,agent in ipairs(_agents) do
     g.push()
     g.translate(agent.pos:unpack())
-    g.polygon('fill', 0, -16, 8, 8, -8, 8)
+    g.setColor(0xCD, 0x53, 0x34, 0xff)
+    g.polygon('fill', 0, -8, 8, 8, -8, 8)
     g.pop()
   end
 end
