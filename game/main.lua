@@ -1,7 +1,45 @@
 
+require 'lib'
+
+local vec2 = require 'cpml'.vec2
+
+local _SPAWN_DELAY = 2
+
+local _spawns = {}
+local _agents = {}
+
+local function _addSpawn(pos, team)
+  table.insert(_spawns, { pos = pos, team = team, delay = _SPAWN_DELAY })
+end
+
+local function _addAgent(pos, team)
+  table.insert(_agents, { pos = pos, team = team })
+end
+
 function love.load()
-  local fs = love.filesystem
-  fs.setRequirePath("lib/?.lua;lib/?/init.lua;" .. fs.getRequirePath())
-  package.cpath = fs.getSourceBaseDirectory() .. "/?.so;" .. package.cpath
+  _addSpawn(vec2(400,300), 1)
+end
+
+function love.update(dt)
+  for _,spawn in ipairs(_spawns) do
+    spawn.delay = spawn.delay - dt
+    if spawn.delay < 0 then
+      spawn.delay = spawn.delay + _SPAWN_DELAY
+      _addAgent(spawn.pos, spawn.team)
+    end
+  end
+  for _,agent in ipairs(_agents) do
+    agent.pos = agent.pos + vec2(50, 0)*dt
+  end
+end
+
+function love.draw()
+  local g = love.graphics
+  for _,agent in ipairs(_agents) do
+    g.push()
+    g.translate(agent.pos:unpack())
+    g.polygon('fill', 0, -16, 8, 8, -8, 8)
+    g.pop()
+  end
 end
 
