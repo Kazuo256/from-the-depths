@@ -45,14 +45,15 @@ end
 -- Pallete: https://coolors.co/17bebb-2e282a-cd5334-edb88b-fad8d6
 function love.draw()
   local g = love.graphics
-  g.setBackgroundColor(0x2E, 0x28, 0x2A)
+  local colors = DB.load('defs').colors
+  g.setBackgroundColor(colors['charleston-green'])
   local w,h = _map.size()
   for i=1,h do
     for j=1,w do
       if _map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
         g.push()
         g.translate(j*32, i*32)
-        g.setColor(0xFA, 0xD8, 0xD6, 0xff)
+        g.setColor(colors['pale-pink'])
         g.rectangle('fill', 4, 4, 24, 24)
         g.pop()
       end
@@ -61,7 +62,7 @@ function love.draw()
   for _,agent in ipairs(_agents) do
     g.push()
     g.translate(agent.pos():unpack())
-    g.setColor(0xCD, 0x53, 0x34, 0xff)
+    g.setColor(colors['tiffany-blue'])
     g.polygon('fill', 0, -8, 8, 8, -8, 8)
     g.pop()
   end
