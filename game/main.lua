@@ -1,4 +1,9 @@
 
+--- TODO list
+--  + [ ] Heap
+--  + [ ] A* algorithm
+--  + [ ] pathfinding agents
+
 require 'lib'
 
 local DB    = require 'db'
