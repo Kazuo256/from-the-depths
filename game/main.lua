@@ -1,9 +1,9 @@
 
 require 'lib'
 
-local vec2  = require 'cpml' .vec2
-
+local DB    = require 'db'
 local Agent = require 'model.agent'
+local vec2  = require 'cpml' .vec2
 
 local _SPAWN_DELAY = 2
 
@@ -17,11 +17,14 @@ end
 local function _addAgent(pos, team)
   local agent = Agent('test')
   agent.setPos(pos)
+  agent.setTarget(vec2(640, 360))
   table.insert(_agents, agent)
 end
 
 function love.load()
-  _addSpawn(vec2(400,300), 1)
+  print(DB.load('defs')['fps'])
+  _addSpawn(vec2(200,200), 1)
+  _addSpawn(vec2(800,400), 1)
 end
 
 function love.update(dt)

@@ -11,7 +11,6 @@ function DB.load(path)
   local spec = _CACHE[path]
   if not spec then
     local fullpath = _PATH_FMT:format(path)
-    print(fullpath)
     local file = FS.newFile(fullpath, 'r')
     local data = file:read()
     file:close()

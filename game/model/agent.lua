@@ -9,9 +9,10 @@ function Agent:instance(_obj, _specname)
 
   setfenv(1, _obj)
 
-  _specname = 'agents/' .. _specname
-  local _spec = DB.load(_specname)
-  local _pos  = vec2(0, 0)
+  _specname     = 'agents/' .. _specname
+  local _spec   = DB.load(_specname)
+  local _pos    = vec2(0, 0)
+  local _target = vec2(0, 0)
 
   function speed()
     return _spec['speed']
@@ -25,8 +26,16 @@ function Agent:instance(_obj, _specname)
     _pos = pos
   end
 
+  function setTarget(target)
+    _target = target
+  end
+
   function move(dt)
-    _pos = _pos + vec2(1,0) * speed() * dt
+    local dist = _target - _pos
+    if dist:len2() > 0.1 then
+      local dir = dist:normalize()
+      _pos = _pos + dir * speed() * dt
+    end
   end
 
 end
