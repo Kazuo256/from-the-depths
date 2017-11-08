@@ -1,0 +1,7 @@
+
+[plains]
+passable = true
+
+[ruins]
+passable = false
+

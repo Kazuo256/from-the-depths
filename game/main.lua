@@ -3,10 +3,12 @@ require 'lib'
 
 local DB    = require 'db'
 local Agent = require 'model.agent'
+local Map   = require 'model.map'
 local vec2  = require 'cpml' .vec2
 
 local _SPAWN_DELAY = 2
 
+local _map
 local _spawns = {}
 local _agents = {}
 
@@ -22,7 +24,7 @@ local function _addAgent(pos, team)
 end
 
 function love.load()
-  print(DB.load('defs')['fps'])
+  _map = Map('test')
   _addSpawn(vec2(200,200), 1)
   _addSpawn(vec2(800,400), 1)
 end
@@ -44,6 +46,18 @@ end
 function love.draw()
   local g = love.graphics
   g.setBackgroundColor(0x2E, 0x28, 0x2A)
+  local w,h = _map.size()
+  for i=1,h do
+    for j=1,w do
+      if _map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
+        g.push()
+        g.translate(j*32, i*32)
+        g.setColor(0xFA, 0xD8, 0xD6, 0xff)
+        g.rectangle('fill', 4, 4, 24, 24)
+        g.pop()
+      end
+    end
+  end
   for _,agent in ipairs(_agents) do
     g.push()
     g.translate(agent.pos():unpack())
