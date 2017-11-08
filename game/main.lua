@@ -1,7 +1,9 @@
 
 require 'lib'
 
-local vec2 = require 'cpml'.vec2
+local vec2  = require 'cpml' .vec2
+
+local Agent = require 'model.agent'
 
 local _SPAWN_DELAY = 2
 
@@ -13,7 +15,9 @@ local function _addSpawn(pos, team)
 end
 
 local function _addAgent(pos, team)
-  table.insert(_agents, { pos = pos, team = team })
+  local agent = Agent('test')
+  agent.setPos(pos)
+  table.insert(_agents, agent)
 end
 
 function love.load()
@@ -29,7 +33,7 @@ function love.update(dt)
     end
   end
   for _,agent in ipairs(_agents) do
-    agent.pos = agent.pos + vec2(50, 0)*dt
+    agent.move(dt)
   end
 end
 
@@ -39,7 +43,7 @@ function love.draw()
   g.setBackgroundColor(0x2E, 0x28, 0x2A)
   for _,agent in ipairs(_agents) do
     g.push()
-    g.translate(agent.pos:unpack())
+    g.translate(agent.pos():unpack())
     g.setColor(0xCD, 0x53, 0x34, 0xff)
     g.polygon('fill', 0, -8, 8, 8, -8, 8)
     g.pop()
