@@ -47,7 +47,6 @@ function love.update(dt)
   end
 end
 
--- Pallete: https://coolors.co/17bebb-2e282a-cd5334-edb88b-fad8d6
 function love.draw()
   local g = love.graphics
   local colors = DB.load('defs').colors
