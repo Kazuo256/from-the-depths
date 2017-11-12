@@ -3,6 +3,11 @@ fps = 60
 
 tile-size = 64
 
+[physics]
+
+collision-radius = 32
+repulsion-factor = 512
+
 [colors]
 
 # Pallete: https://coolors.co/17bebb-2e282a-cd5334-edb88b-fad8d6

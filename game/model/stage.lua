@@ -9,13 +9,15 @@ local setfenv = setfenv
 local print   = print
 local ipairs  = ipairs
 local table   = table
+local math    = math
 
 function Stage:instance(_obj, _specname)
 
   setfenv(1, _obj)
 
-  _specname     = 'stages/' .. _specname
-  local _spec   = DB.load(_specname)
+  _specname       = 'stages/' .. _specname
+  local _spec     = DB.load(_specname)
+  local _PHYSDEFS = DB.load('defs')['physics']
 
   --[[ Tile Map ]]--
 
@@ -54,7 +56,7 @@ function Stage:instance(_obj, _specname)
   end
 
   --[[ Overall Logic ]]--
-
+  
   function tick(dt)
     for _,camp in ipairs(_camps) do
       camp.count = camp.count - dt
@@ -63,8 +65,23 @@ function Stage:instance(_obj, _specname)
         _addAgent(camp.spawns, vec2(camp.pos))
       end
     end
+    local repulsion = {}
+    local colradius = _PHYSDEFS['collision-radius']
+    local repfactor = _PHYSDEFS['repulsion-factor']
     for _,agent in ipairs(_agents) do
-      local dir = agent.getIntention()
+      local rep = vec2(0,0)
+      for _,other in ipairs(_agents) do
+        local dist = other.pos() - agent.pos()
+        local len2 = math.max(dist:len2(), 1)
+        if agent ~= other and len2 < colradius*colradius then
+          rep = rep - dist:normalize() * repfactor/len2
+        end
+      end
+      repulsion[agent] = rep
+    end
+
+    for _,agent in ipairs(_agents) do
+      local dir = (agent.getIntention() + repulsion[agent]):normalize()
       local dir_h = vec2(dir.x,0)
       local dir_v = vec2(0,dir.y)
       local dirs = { dir, dir_h, dir_v }

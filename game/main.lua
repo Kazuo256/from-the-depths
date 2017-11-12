@@ -3,7 +3,7 @@
 --  + [ ] Basic physics
 --    + [x] Fixed-frame update
 --    + [x] Delegate movement to map
---    + [ ] Tile collision
+--    + [x] Tile collision
 --    + [ ] Inter-agent repulsion
 --  + [ ] Basic intelligent movement
 --    + [ ] Heap
