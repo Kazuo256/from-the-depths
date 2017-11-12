@@ -32,8 +32,8 @@ function Map:instance(_obj, _specname)
   end
 
   local function _point2index(pos)
-    local j = math.floor(pos.x / self:tilesize())
-    local i = math.floor(pos.y / self:tilesize())
+    local j = math.floor(pos.x / self:tilesize()) + 1
+    local i = math.floor(pos.y / self:tilesize()) + 1
     return _inside(i,j) and _index(i,j)
   end
 

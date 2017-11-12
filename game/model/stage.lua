@@ -64,9 +64,16 @@ function Stage:instance(_obj, _specname)
       end
     end
     for _,agent in ipairs(_agents) do
-      local new_pos = agent.move(agent.getIntention(), dt)
-      if _map.passable(new_pos) then
-        agent.setPos(new_pos)
+      local dir = agent.getIntention()
+      local dir_h = vec2(dir.x,0)
+      local dir_v = vec2(0,dir.y)
+      local dirs = { dir, dir_h, dir_v }
+      for _,d in ipairs(dirs) do
+        local new_pos = agent.move(d, dt)
+        if _map.passable(new_pos) then
+          agent.setPos(new_pos)
+          break
+        end
       end
     end
   end
