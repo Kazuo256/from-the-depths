@@ -17,17 +17,20 @@
 
 require 'lib'
 
-local DB    = require 'db'
-local Stage = require 'model.stage'
+local DB        = require 'db'
+local Stage     = require 'model.stage'
+local StageView = require 'ui.stageview'
 
 local _FRAME
 local _lag
 
 local _stage
+local _view
 
 function love.load()
   _lag = 0
   _stage = Stage('test')
+  _view = StageView(_stage)
   _FRAME = 1 / DB.load('defs')['fps']
 end
 
@@ -40,29 +43,6 @@ function love.update(dt)
 end
 
 function love.draw()
-  local g = love.graphics
-  local colors = DB.load('defs')['colors']
-  local tilesize = DB.load('defs')['tile-size']
-  local map = _stage.map()
-  g.setBackgroundColor(colors['charleston-green'])
-  local w,h = map.size()
-  for i=1,h do
-    for j=1,w do
-      if map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
-        g.push()
-        g.translate((j-1)*tilesize, (i-1)*tilesize)
-        g.setColor(colors['pale-gold'])
-        g.rectangle('fill', 4, 4, 48, 48)
-        g.pop()
-      end
-    end
-  end
-  for _,agent in _stage.eachAgent() do
-    g.push()
-    g.translate(agent.pos():unpack())
-    g.setColor(colors['tiffany-blue'])
-    g.polygon('fill', 0, -8, 8, 8, -8, 8)
-    g.pop()
-  end
+  _view.draw()
 end
 
