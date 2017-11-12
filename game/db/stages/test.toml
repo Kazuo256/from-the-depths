@@ -7,7 +7,7 @@ delay = 2
 spawns = "test"
 
 [[camps]]
-pos = [800, 400]
+pos = [500, 400]
 delay = 2
 spawns = "test"
 

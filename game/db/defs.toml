@@ -1,7 +1,7 @@
 
 fps = 60
 
-tile-size = 32
+tile-size = 64
 
 [colors]
 
@@ -9,5 +9,6 @@ tile-size = 32
 tiffany-blue = [23, 190, 187, 255]
 charleston-green = [46, 40, 42, 255]
 dark-coral = [205, 83, 52, 255]
+pale-gold = [237, 184, 139, 255]
 pale-pink = [250, 216, 214, 255]
 

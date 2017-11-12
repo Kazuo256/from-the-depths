@@ -50,9 +50,9 @@ function love.draw()
     for j=1,w do
       if map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
         g.push()
-        g.translate(j*tilesize, i*tilesize)
-        g.setColor(colors['pale-pink'])
-        g.rectangle('fill', 4, 4, 24, 24)
+        g.translate((j-1)*tilesize, (i-1)*tilesize)
+        g.setColor(colors['pale-gold'])
+        g.rectangle('fill', 4, 4, 48, 48)
         g.pop()
       end
     end
