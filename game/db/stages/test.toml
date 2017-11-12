@@ -4,8 +4,10 @@ map = "test"
 [[camps]]
 pos = [200, 200]
 delay = 2
+spawns = "test"
 
 [[camps]]
 pos = [800, 400]
 delay = 2
+spawns = "test"
 

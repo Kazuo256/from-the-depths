@@ -1,6 +1,8 @@
 
+local vec2  = require 'cpml' .vec2
 local DB    = require 'db'
 local Map   = require 'model.map'
+local Agent = require 'model.agent'
 local Stage = require 'lux.class' :new{}
 
 local setfenv = setfenv
@@ -23,12 +25,28 @@ function Stage:instance(_obj, _specname)
     return _map
   end
 
+  --[[ Agents ]]--
+
+  local _agents = {}
+
+  local function _addAgent(specname, pos)
+    local agent = Agent(specname)
+    agent.setPos(pos)
+    agent.setTarget(vec2(640, 360))
+    table.insert(_agents, agent)
+  end
+
+  function eachAgent()
+    return ipairs(_agents)
+  end
+
   --[[ Base Camps ]]--
 
   local _camps  = {}
 
   local function _addCamp(spec)
-    table.insert(_camps, { pos = spec['pos'], delay = spec['delay'] })
+    table.insert(_camps, spec)
+    spec.count = spec.delay
   end
 
   for _,campspec in ipairs(_spec['camps']) do
@@ -37,7 +55,17 @@ function Stage:instance(_obj, _specname)
 
   --[[ Overall Logic ]]--
 
-  function update()
+  function tick(dt)
+    for _,camp in ipairs(_camps) do
+      camp.count = camp.count - dt
+      if camp.count < 0 then
+        camp.count = camp.count + camp.delay
+        _addAgent(camp.spawns, vec2(camp.pos))
+      end
+    end
+    for _,agent in ipairs(_agents) do
+      agent.move(dt)
+    end
   end
 
 end

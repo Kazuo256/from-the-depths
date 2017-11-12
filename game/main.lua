@@ -18,43 +18,16 @@
 require 'lib'
 
 local DB    = require 'db'
-local Agent = require 'model.agent'
 local Stage = require 'model.stage'
-local vec2  = require 'cpml' .vec2
-local _SPAWN_DELAY = 2
 
 local _stage
-local _spawns = {}
-local _agents = {}
-
-local function _addSpawn(pos, team)
-  table.insert(_spawns, { pos = pos, team = team, delay = _SPAWN_DELAY })
-end
-
-local function _addAgent(pos, team)
-  local agent = Agent('test')
-  agent.setPos(pos)
-  agent.setTarget(vec2(640, 360))
-  table.insert(_agents, agent)
-end
 
 function love.load()
   _stage = Stage('test')
-  _addSpawn(vec2(200,200), 1)
-  _addSpawn(vec2(800,400), 1)
 end
 
 function love.update(dt)
-  for _,spawn in ipairs(_spawns) do
-    spawn.delay = spawn.delay - dt
-    if spawn.delay < 0 then
-      spawn.delay = spawn.delay + _SPAWN_DELAY
-      _addAgent(spawn.pos, spawn.team)
-    end
-  end
-  for _,agent in ipairs(_agents) do
-    agent.move(dt)
-  end
+  _stage.tick(dt)
 end
 
 function love.draw()
@@ -74,7 +47,7 @@ function love.draw()
       end
     end
   end
-  for _,agent in ipairs(_agents) do
+  for _,agent in _stage.eachAgent() do
     g.push()
     g.translate(agent.pos():unpack())
     g.setColor(colors['tiffany-blue'])
