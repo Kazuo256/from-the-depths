@@ -3,6 +3,10 @@ fps = 60
 
 tile-size = 64
 
+[gameplay]
+
+spawn-delay = 2
+
 [physics]
 
 collision-radius = 32

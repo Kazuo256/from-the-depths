@@ -1,6 +1,7 @@
 
-local DB  = require 'db'
-local Map = require 'lux.class' :new{}
+local DB    = require 'db'
+local vec2  = require 'cpml' .vec2
+local Map   = require 'lux.class' :new{}
 
 local setfenv = setfenv
 local print   = print
@@ -47,12 +48,23 @@ function Map:instance(_obj, _specname)
     end
   end
 
+  function pos2point(i, j)
+    return vec2((j-1)*self:tilesize(), (i-1)*self:tilesize())
+  end
+
   function size()
     return _w, _h
   end
 
   function tilespec(i, j)
     return _tiles[_index(i,j)].spec
+  end
+
+  function setTileData(i, j, key, value)
+    local index = _inside(i,j) and _index(i,j)
+    if index then
+      _tiles[index][key] = value
+    end
   end
 
   function passable(pos)

@@ -1,13 +1,16 @@
 
-local vec2  = require 'cpml' .vec2
-local DB    = require 'db'
-local Map   = require 'model.map'
-local Agent = require 'model.agent'
-local Stage = require 'lux.class' :new{}
+local vec2        = require 'cpml' .vec2
+local DB          = require 'db'
+local Map         = require 'model.map'
+local Agent       = require 'model.agent'
+local Settlement  = require 'model.settlement'
+local Stage       = require 'lux.class' :new{}
 
 local setfenv = setfenv
 local print   = print
 local ipairs  = ipairs
+local pairs   = pairs
+local unpack  = unpack
 local table   = table
 local math    = math
 
@@ -42,27 +45,31 @@ function Stage:instance(_obj, _specname)
     return ipairs(_agents)
   end
 
-  --[[ Base Camps ]]--
+  --[[ Settlements ]]--
 
-  local _camps  = {}
+  local _settlements  = {}
 
-  local function _addCamp(spec)
-    table.insert(_camps, spec)
-    spec.count = spec.delay
+  local function _addSettlement(spec)
+    local settlement = Settlement()
+    local pos = spec['pos']
+    local i, j = unpack(pos)
+    _settlements[settlement] = pos
+    _map.setTileData(i, j, 'settlement', settlement)
   end
 
-  for _,campspec in ipairs(_spec['camps']) do
-    _addCamp(campspec)
+  for _,settlementspec in ipairs(_spec['settlements']) do
+    _addSettlement(settlementspec)
   end
 
   --[[ Overall Logic ]]--
   
   function tick(dt)
-    for _,camp in ipairs(_camps) do
-      camp.count = camp.count - dt
-      if camp.count < 0 then
-        camp.count = camp.count + camp.delay
-        _addAgent(camp.spawns, vec2(camp.pos))
+    for settlement,pos in pairs(_settlements) do
+      local i, j = unpack(pos)
+      settlement.tick(dt)
+      local spawn = settlement.nextSpawn()
+      if spawn then
+        _addAgent(spawn, _map.pos2point(i,j) + vec2(.5,.5) * Map:tilesize())
       end
     end
     local repulsion = {}

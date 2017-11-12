@@ -1,13 +1,9 @@
 
 map = "test"
 
-[[camps]]
-pos = [200, 200]
-delay = 2
-spawns = "test"
+[[settlements]]
+pos = [3, 3]
 
-[[camps]]
-pos = [500, 400]
-delay = 2
-spawns = "test"
+[[settlements]]
+pos = [6, 7]
 

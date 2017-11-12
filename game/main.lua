@@ -1,10 +1,10 @@
 
 --- TODO list
---  + [ ] Basic physics
+--  + [x] Basic physics
 --    + [x] Fixed-frame update
 --    + [x] Delegate movement to map
 --    + [x] Tile collision
---    + [ ] Inter-agent repulsion
+--    + [x] Inter-agent repulsion
 --  + [ ] Basic intelligent movement
 --    + [ ] Heap
 --    + [ ] A* algorithm
