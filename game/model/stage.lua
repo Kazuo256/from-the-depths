@@ -61,6 +61,10 @@ function Stage:instance(_obj, _specname)
     _addSettlement(settlementspec)
   end
 
+  function eachSettlement()
+    return pairs(_settlements)
+  end
+
   --[[ Overall Logic ]]--
   
   function tick(dt)

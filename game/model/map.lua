@@ -29,9 +29,14 @@ function Map:instance(_obj, _spec)
     return i >= 1 and i <= _h and j >= 1 and j <= _h
   end
 
-  local function _point2index(pos)
+  local function _point2pos(pos)
     local j = math.floor(pos.x / self:tilesize()) + 1
     local i = math.floor(pos.y / self:tilesize()) + 1
+    return i, j
+  end
+
+  local function _point2index(pos)
+    local i, j = _point2pos(pos)
     return _inside(i,j) and _index(i,j)
   end
 
@@ -43,6 +48,10 @@ function Map:instance(_obj, _spec)
       }
       _tiles[_index(i,j)] = tile
     end
+  end
+
+  function point2pos(point)
+    return _point2pos(point)
   end
 
   function pos2point(i, j)

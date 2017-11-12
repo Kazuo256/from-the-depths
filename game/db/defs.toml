@@ -5,7 +5,7 @@ tile-size = 64
 
 [gameplay]
 
-spawn-delay = 2
+spawn-delay = 0.5
 
 [physics]
 

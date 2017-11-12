@@ -18,6 +18,7 @@
 require 'lib'
 
 local DB        = require 'db'
+local MOUSE     = require 'ui.mouse'
 local Stage     = require 'model.stage'
 local StageView = require 'ui.stageview'
 
@@ -37,8 +38,14 @@ end
 function love.update(dt)
   _lag = _lag + dt
   while _lag >= _FRAME do
-    _stage.tick(_FRAME)
     _lag = _lag - _FRAME
+    MOUSE.update(_FRAME)
+    _stage.tick(_FRAME)
+    for settlement, pos in _stage.eachSettlement() do
+      if _view.settlementSelected(settlement, unpack(pos)) then
+        settlement.requestSpawn(10)
+      end
+    end
   end
 end
 

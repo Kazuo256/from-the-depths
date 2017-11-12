@@ -1,13 +1,21 @@
 
 local DB        = require 'db'
+local MOUSE     = require 'ui.mouse'
 local StageView = require 'lux.class' :new{}
 
 local setfenv = setfenv
 local love    = love
+local print   = print
 
 function StageView:instance(_obj, _stage)
 
   setfenv(1, _obj)
+
+  function settlementSelected(settlement, i, j)
+    local mpos = MOUSE.pos()
+    local mi, mj = _stage.map().point2pos(mpos)
+    return MOUSE.clicked(1) and mi == i and mj == j
+  end
 
   function draw()
     local g = love.graphics
@@ -22,7 +30,7 @@ function StageView:instance(_obj, _stage)
         g.translate((j-1)*tilesize, (i-1)*tilesize)
         g.setColor(colors['pale-gold'])
         if map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
-          g.rectangle('fill', 8, 8, 48, 48)
+          g.rectangle('fill', 8, 8, tilesize - 16, tilesize - 16)
         end
         local settlement = map.getTileData(i, j, 'settlement')
         if settlement then
