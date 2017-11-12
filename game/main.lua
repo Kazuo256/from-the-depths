@@ -20,14 +20,23 @@ require 'lib'
 local DB    = require 'db'
 local Stage = require 'model.stage'
 
+local _FRAME
+local _lag
+
 local _stage
 
 function love.load()
+  _lag = 0
   _stage = Stage('test')
+  _FRAME = 1 / DB.load('defs')['fps']
 end
 
 function love.update(dt)
-  _stage.tick(dt)
+  _lag = _lag + dt
+  while _lag >= _FRAME do
+    _stage.tick(_FRAME)
+    _lag = _lag - _FRAME
+  end
 end
 
 function love.draw()
