@@ -11,12 +11,9 @@ function Map:tilesize()
   return DB.load('defs')['tile-size']
 end
 
-function Map:instance(_obj, _specname)
+function Map:instance(_obj, _spec)
 
   setfenv(1, _obj)
-
-  _specname         = 'maps/' .. _specname
-  local _spec       = DB.load(_specname)
 
   --[[ Tile Grid ]]--
 
