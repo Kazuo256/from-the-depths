@@ -1,19 +1,29 @@
 
 --- TODO list
---  + [ ] Heap
---  + [ ] A* algorithm
---  + [ ] pathfinding agents
+--  + [ ] Basic physics
+--    + [ ] Fixed-frame update
+--    + [ ] Delegate movement to map
+--    + [ ] Tile collision
+--    + [ ] Inter-agent repulsion
+--  + [ ] Basic intelligent movement
+--    + [ ] Heap
+--    + [ ] A* algorithm
+--    + [ ] pathfinding agents
+--    + [ ] Behavior class
+--  + [ ] Basic interaction??
+--    + [ ] Agent pool
+--    + [ ] Deploy mechanics
+--    + [ ] Basecamp interaction
 
 require 'lib'
 
 local DB    = require 'db'
 local Agent = require 'model.agent'
-local Map   = require 'model.map'
+local Stage = require 'model.stage'
 local vec2  = require 'cpml' .vec2
-
 local _SPAWN_DELAY = 2
 
-local _map
+local _stage
 local _spawns = {}
 local _agents = {}
 
@@ -29,7 +39,7 @@ local function _addAgent(pos, team)
 end
 
 function love.load()
-  _map = Map('test')
+  _stage = Stage('test')
   _addSpawn(vec2(200,200), 1)
   _addSpawn(vec2(800,400), 1)
 end
@@ -50,11 +60,12 @@ end
 function love.draw()
   local g = love.graphics
   local colors = DB.load('defs').colors
+  local map = _stage.map()
   g.setBackgroundColor(colors['charleston-green'])
-  local w,h = _map.size()
+  local w,h = map.size()
   for i=1,h do
     for j=1,w do
-      if _map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
+      if map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
         g.push()
         g.translate(j*32, i*32)
         g.setColor(colors['pale-pink'])
