@@ -57,6 +57,11 @@ function Map:instance(_obj, _spec)
     return _tiles[_index(i,j)].spec
   end
 
+  function getTileData(i, j, key)
+    local index = _inside(i,j) and _index(i,j)
+    return index and _tiles[index][key]
+  end
+
   function setTileData(i, j, key, value)
     local index = _inside(i,j) and _index(i,j)
     if index then
