@@ -64,7 +64,10 @@ function Stage:instance(_obj, _specname)
       end
     end
     for _,agent in ipairs(_agents) do
-      agent.move(dt)
+      local new_pos = agent.move(agent.getIntention(), dt)
+      if _map.passable(new_pos) then
+        agent.setPos(new_pos)
+      end
     end
   end
 

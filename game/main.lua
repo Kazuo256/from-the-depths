@@ -1,8 +1,8 @@
 
 --- TODO list
 --  + [ ] Basic physics
---    + [ ] Fixed-frame update
---    + [ ] Delegate movement to map
+--    + [x] Fixed-frame update
+--    + [x] Delegate movement to map
 --    + [ ] Tile collision
 --    + [ ] Inter-agent repulsion
 --  + [ ] Basic intelligent movement
@@ -41,7 +41,8 @@ end
 
 function love.draw()
   local g = love.graphics
-  local colors = DB.load('defs').colors
+  local colors = DB.load('defs')['colors']
+  local tilesize = DB.load('defs')['tile-size']
   local map = _stage.map()
   g.setBackgroundColor(colors['charleston-green'])
   local w,h = map.size()
@@ -49,7 +50,7 @@ function love.draw()
     for j=1,w do
       if map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
         g.push()
-        g.translate(j*32, i*32)
+        g.translate(j*tilesize, i*tilesize)
         g.setColor(colors['pale-pink'])
         g.rectangle('fill', 4, 4, 24, 24)
         g.pop()

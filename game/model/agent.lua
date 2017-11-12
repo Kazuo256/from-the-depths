@@ -30,12 +30,17 @@ function Agent:instance(_obj, _specname)
     _target = target
   end
 
-  function move(dt)
+  function getIntention()
+    local dir = vec2(0, 0)
     local dist = _target - _pos
     if dist:len2() > 0.1 then
-      local dir = dist:normalize()
-      _pos = _pos + dir * speed() * dt
+      dir = dist:normalize()
     end
+    return dir
+  end
+
+  function move(dir, dt)
+    return _pos + dir * speed() * dt
   end
 
 end
