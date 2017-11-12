@@ -36,6 +36,7 @@ function love.load()
 end
 
 function love.update(dt)
+  _view.update(dt)
   _lag = _lag + dt
   while _lag >= _FRAME do
     _lag = _lag - _FRAME

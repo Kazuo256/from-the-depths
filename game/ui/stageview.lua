@@ -6,15 +6,28 @@ local StageView = require 'lux.class' :new{}
 local setfenv = setfenv
 local love    = love
 local print   = print
+local pairs   = pairs
 
 function StageView:instance(_obj, _stage)
 
   setfenv(1, _obj)
 
+  local _clicked = {}
+
   function settlementSelected(settlement, i, j)
     local mpos = MOUSE.pos()
     local mi, mj = _stage.map().point2pos(mpos)
-    return MOUSE.clicked(1) and mi == i and mj == j
+    if MOUSE.clicked(1) and mi == i and mj == j then
+      _clicked[settlement] = 0.2
+      return true
+    end
+  end
+
+  function update(dt)
+    for k,v in pairs(_clicked) do
+      local clicked = _clicked[k] - dt
+      _clicked[k] = clicked > 0 and clicked or nil
+    end
   end
 
   function draw()
@@ -34,7 +47,12 @@ function StageView:instance(_obj, _stage)
         end
         local settlement = map.getTileData(i, j, 'settlement')
         if settlement then
-          g.rectangle('line', 0, 0, tilesize, tilesize)
+          local clicked = _clicked[settlement] or 0
+          g.push()
+          g.translate(tilesize/2, tilesize/2)
+          g.scale(1 + clicked, 1 + clicked)
+          g.rectangle('line', -tilesize/2, -tilesize/2, tilesize, tilesize)
+          g.pop()
         end
         g.pop()
       end
