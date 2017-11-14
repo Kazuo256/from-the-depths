@@ -26,7 +26,7 @@ function Map:instance(_obj, _spec)
   end
 
   local function _inside(i,j)
-    return i >= 1 and i <= _h and j >= 1 and j <= _h
+    return i >= 1 and i <= _h and j >= 1 and j <= _w
   end
 
   local function _point2pos(pos)
