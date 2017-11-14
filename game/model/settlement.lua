@@ -1,5 +1,6 @@
 
 local DB          = require 'db'
+local Queue       = require 'lux.common.Queue'
 local Settlement  = require 'lux.class' :new{}
 
 local setfenv = setfenv
@@ -10,32 +11,32 @@ function Settlement:instance(_obj)
   setfenv(1, _obj)
 
   local _DELAY    = DB.load('defs')['gameplay']['spawn-delay']
-  local _pending  = 0
+  local _pending  = Queue(128)
   local _count    = 0
-  local _next     = nil
+  local _next     = false
 
   function tick(dt)
-    if _pending > 0 then
+    if not _pending.isEmpty() then
       _count = _count + dt
       if _count >= _DELAY then
         _count = _count - _DELAY
-        _next = 'test'
+        _next = true
       end
     else
       _count = _DELAY
     end
   end
 
-  function requestSpawn(n)
-    _pending = _pending + n
+  function requestSpawn(n, target)
+    for i=1,n do
+      _pending.push('test')
+    end
   end
 
   function nextSpawn()
     if _next then
-      local n = _next
-      _next = nil
-      _pending = _pending - 1
-      return n
+      _next = false
+      return _pending.pop()
     end
   end
 
