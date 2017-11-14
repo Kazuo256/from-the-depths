@@ -30,11 +30,14 @@ local _lag
 local _stage
 local _view
 
+local _sepected
+
 function love.load()
+  _FRAME = 1 / DB.load('defs')['fps']
   _lag = 0
   _stage = Stage('test')
   _view = StageView(_stage)
-  _FRAME = 1 / DB.load('defs')['fps']
+  _selected = nil
 end
 
 function love.update(dt)
@@ -46,7 +49,10 @@ function love.update(dt)
     _stage.tick(_FRAME)
     for settlement, pos in _stage.eachSettlement() do
       if _view.settlementSelected(settlement, unpack(pos)) then
-        settlement.requestSpawn(10, vec2(640, 360))
+        _selected = settlement
+      end
+      if _selected and _view.targetSelected(settlement, unpack(pos)) then
+        _selected.requestSpawn(10, pos)
       end
     end
   end

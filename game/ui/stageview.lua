@@ -23,6 +23,15 @@ function StageView:instance(_obj, _stage)
     end
   end
 
+  function targetSelected(settlement, i, j)
+    local mpos = MOUSE.pos()
+    local mi, mj = _stage.map().point2pos(mpos)
+    if MOUSE.clicked(2) and mi == i and mj == j then
+      _clicked[settlement] = 0.2
+      return true
+    end
+  end
+
   function update(dt)
     for k,v in pairs(_clicked) do
       local clicked = _clicked[k] - dt

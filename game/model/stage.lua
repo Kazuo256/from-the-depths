@@ -38,7 +38,7 @@ function Stage:instance(_obj, _specname)
     local specname, target = unpack(spawn)
     local agent = Agent(specname)
     agent.setPos(pos)
-    agent.setTarget(target)
+    agent.setTarget(_map.pos2point(unpack(target)))
     table.insert(_agents, agent)
   end
 
