@@ -22,6 +22,8 @@ local MOUSE     = require 'ui.mouse'
 local Stage     = require 'model.stage'
 local StageView = require 'ui.stageview'
 
+local vec2      = require 'cpml' .vec2
+
 local _FRAME
 local _lag
 
@@ -44,7 +46,7 @@ function love.update(dt)
     _stage.tick(_FRAME)
     for settlement, pos in _stage.eachSettlement() do
       if _view.settlementSelected(settlement, unpack(pos)) then
-        settlement.requestSpawn(10)
+        settlement.requestSpawn(10, vec2(640, 360))
       end
     end
   end

@@ -34,10 +34,11 @@ function Stage:instance(_obj, _specname)
 
   local _agents = {}
 
-  local function _addAgent(specname, pos)
+  local function _addAgent(spawn, pos)
+    local specname, target = unpack(spawn)
     local agent = Agent(specname)
     agent.setPos(pos)
-    agent.setTarget(vec2(640, 360))
+    agent.setTarget(target)
     table.insert(_agents, agent)
   end
 

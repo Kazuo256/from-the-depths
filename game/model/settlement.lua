@@ -29,7 +29,7 @@ function Settlement:instance(_obj)
 
   function requestSpawn(n, target)
     for i=1,n do
-      _pending.push('test')
+      _pending.push({'test', target})
     end
   end
 
