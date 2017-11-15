@@ -6,6 +6,11 @@ tile-size = 64
 [gameplay]
 
 spawn-delay = 0.5
+neighbors = [
+  [-1, -1], [-1, 0], [-1, 1],
+  [0, -1], [0, 1],
+  [1, -1], [1, 0], [1, 1]
+]
 
 [physics]
 

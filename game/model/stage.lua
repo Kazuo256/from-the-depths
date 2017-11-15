@@ -4,6 +4,7 @@ local DB          = require 'db'
 local Map         = require 'model.map'
 local Agent       = require 'model.agent'
 local Settlement  = require 'model.settlement'
+local PathFinder  = require 'model.pathfinder'
 local Stage       = require 'lux.class' :new{}
 
 local setfenv = setfenv
@@ -24,10 +25,15 @@ function Stage:instance(_obj, _specname)
 
   --[[ Tile Map ]]--
 
-  local _map    = Map(_spec['map'])
+  local _map        = Map(_spec['map'])
+  local _pathfinder = PathFinder(_map)
 
   function map()
     return _map
+  end
+
+  function pathfinder()
+    return _pathfinder
   end
 
   --[[ Agents ]]--
@@ -36,10 +42,9 @@ function Stage:instance(_obj, _specname)
 
   local function _addAgent(spawn, pos)
     local specname, target = unpack(spawn)
-    local ti, tj = unpack(target)
     local agent = Agent(specname)
     agent.setPos(pos)
-    agent.setTarget(_map.pos2point(ti, tj))
+    agent.setTarget(target)
     table.insert(_agents, agent)
   end
 
@@ -65,6 +70,10 @@ function Stage:instance(_obj, _specname)
 
   function eachSettlement()
     return pairs(_settlements)
+  end
+
+  function settlementPos(settlement)
+    return _settlements[settlement]
   end
 
   --[[ Overall Logic ]]--
@@ -95,7 +104,8 @@ function Stage:instance(_obj, _specname)
 
     local removed = {}
     for k,agent in ipairs(_agents) do
-      local dir = (agent.getIntention() + repulsion[agent]):normalize()
+      local dir = (agent.getIntention(_map, _pathfinder) + repulsion[agent])
+                  :normalize()
       local dir_h = vec2(dir.x,0)
       local dir_v = vec2(0,dir.y)
       local dirs = { dir, dir_h, dir_v }
@@ -107,7 +117,7 @@ function Stage:instance(_obj, _specname)
         end
       end
       local pi, pj = _map.point2pos(agent.pos())
-      local ti, tj = _map.point2pos(agent.target())
+      local ti, tj = agent.target()
       if pi == ti and pj == tj and _map.getTileData(pi, pj, 'settlement') then
         table.insert(removed, k)
       end
