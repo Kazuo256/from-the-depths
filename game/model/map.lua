@@ -38,7 +38,8 @@ function Map:instance(_obj, _spec)
 
   for i=1,_h do
     for j=1,_w do
-      local tile_specname = _spec.pallete[_spec.tiles[_index(i,j)]]
+      local index = _index(i,j)
+      local tile_specname = _spec.pallete[_spec.tiles:sub(index,index)]
       local tile = {
         spec = _tiletypes[tile_specname]
       }
