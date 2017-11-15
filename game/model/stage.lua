@@ -36,9 +36,10 @@ function Stage:instance(_obj, _specname)
 
   local function _addAgent(spawn, pos)
     local specname, target = unpack(spawn)
+    local ti, tj = unpack(target)
     local agent = Agent(specname)
     agent.setPos(pos)
-    agent.setTarget(_map.pos2point(unpack(target)))
+    agent.setTarget(_map.pos2point(ti, tj))
     table.insert(_agents, agent)
   end
 
@@ -74,7 +75,7 @@ function Stage:instance(_obj, _specname)
       settlement.tick(dt)
       local spawn = settlement.nextSpawn()
       if spawn then
-        _addAgent(spawn, _map.pos2point(i,j) + vec2(.5,.5) * Map:tilesize())
+        _addAgent(spawn, _map.pos2point(i,j))
       end
     end
     local repulsion = {}
@@ -84,7 +85,7 @@ function Stage:instance(_obj, _specname)
       local rep = vec2(0,0)
       for _,other in ipairs(_agents) do
         local dist = other.pos() - agent.pos()
-        local len2 = math.max(dist:len2(), 1)
+        local len2 = math.max(dist:len2(), 0.01)
         if agent ~= other and len2 < colradius*colradius then
           rep = rep - dist:normalize() * repfactor/len2
         end

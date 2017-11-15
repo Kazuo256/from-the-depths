@@ -33,7 +33,7 @@ function Agent:instance(_obj, _specname)
   function getIntention()
     local dir = vec2(0, 0)
     local dist = _target - _pos
-    if dist:len2() > 0.1 then
+    if dist:len2() > 0.001 then
       dir = dist:normalize()
     end
     return dir

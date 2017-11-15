@@ -7,10 +7,6 @@ local setfenv = setfenv
 local print   = print
 local math    = math
 
-function Map:tilesize()
-  return DB.load('defs')['tile-size']
-end
-
 function Map:instance(_obj, _spec)
 
   setfenv(1, _obj)
@@ -30,8 +26,8 @@ function Map:instance(_obj, _spec)
   end
 
   local function _point2pos(pos)
-    local j = math.floor(pos.x / self:tilesize()) + 1
-    local i = math.floor(pos.y / self:tilesize()) + 1
+    local j = math.ceil(pos.x)
+    local i = math.ceil(pos.y)
     return i, j
   end
 
@@ -55,7 +51,7 @@ function Map:instance(_obj, _spec)
   end
 
   function pos2point(i, j)
-    return vec2((j-1)*self:tilesize(), (i-1)*self:tilesize())
+    return vec2(j - 0.5, i - 0.5)
   end
 
   function size()
