@@ -6,6 +6,7 @@ local vec2    = require 'cpml' .vec2
 local setfenv = setfenv
 local unpack  = unpack
 local ipairs  = ipairs
+local pairs   = pairs
 local print   = print
 
 function Agent:instance(_obj, _specname)
@@ -46,10 +47,18 @@ function Agent:instance(_obj, _specname)
     local pi, pj = pathfinder.findPath(
       si, sj, ti, tj,
       function (i, j)
-        local n = map.getTileData(i, j, 'agents').n
+        local n = 0
+        for other in pairs(map.getTileData(i, j, 'agents')) do
+          if other ~= 'n' then
+            local oi, oj = other.target()
+            if oi ~= ti or oj ~= tj then
+              n = n + 3
+            end
+          end
+        end
         return n
       end,
-      dist+10
+      dist+20
     )
     if pi and pj then
       local target = map.pos2point(pi, pj)
