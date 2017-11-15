@@ -5,6 +5,7 @@ local Agent = require 'lux.class' :new{}
 local vec2    = require 'cpml' .vec2
 local setfenv = setfenv
 local unpack  = unpack
+local ipairs  = ipairs
 
 function Agent:instance(_obj, _specname)
 
@@ -38,13 +39,29 @@ function Agent:instance(_obj, _specname)
   end
 
   function getIntention(map, pathfinder)
-    local target = map.pos2point(unpack(_target))
-    local dir = vec2(0, 0)
-    local dist = target - _pos
-    if dist:len2() > 0.001 then
-      dir = dist:normalize()
+    local pi, pj = map.point2pos(_pos)
+    local ti, tj = target()
+    local min
+    local tgt
+    for _,neigh in ipairs(_NEIGHBORS) do
+      local i,j = pi + neigh[1], pj + neigh[2]
+      local dist = pathfinder.dist(i, j, ti, tj)
+      if dist and (not min or dist < min) then
+        min = dist
+        tgt = {i,j}
+      end
     end
-    return dir
+    if tgt then
+      local target = map.pos2point(unpack(tgt))
+      local dir = vec2(0, 0)
+      local dist = target - _pos
+      if dist:len2() > 0.001 then
+        dir = dist:normalize()
+      end
+      return dir
+    else
+      return vec2(0, 0)
+    end
   end
 
   function move(dir, dt)
