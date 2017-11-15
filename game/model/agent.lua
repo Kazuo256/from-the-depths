@@ -39,15 +39,18 @@ function Agent:instance(_obj, _specname)
   end
 
   function getIntention(map, pathfinder)
-    local pi, pj = map.point2pos(_pos)
-    local ti, tj = pathfinder.findPath(
+    local si, sj = map.point2pos(_pos)
+    local ti, tj = target()
+    local dist = pathfinder.dist(si, sj, ti, tj)
+    local pi, pj = pathfinder.findPath(
+      si, sj, ti, tj,
       function (i, j)
         return map.getTileData(i, j, 'agents')
       end,
-      pi, pj, target()
+      dist+10
     )
-    if ti and tj then
-      local target = map.pos2point(ti, tj)
+    if pi and pj then
+      local target = map.pos2point(pi, pj)
       local dir = vec2(0, 0)
       local dist = target - _pos
       if dist:len2() > 0.001 then
