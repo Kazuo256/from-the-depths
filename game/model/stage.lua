@@ -100,7 +100,7 @@ function Stage:instance(_obj, _specname)
   end
 
   function settlementPos(settlement)
-    return _settlements[settlement]
+    return unpack(_settlements[settlement])
   end
 
   --[[ Overall Logic ]]--
@@ -114,6 +114,16 @@ function Stage:instance(_obj, _specname)
       if spawn then
         _addAgent(spawn, i, j)
       end
+    end
+
+    -- Trace tactical paths
+    for settlement,pos in pairs(_settlements) do
+      _pathfinder.generatePaths(
+        pos[1], pos[2],
+        function (i, j)
+          return 0
+        end
+      )
     end
 
     -- Repel packed agents

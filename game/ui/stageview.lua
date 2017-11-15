@@ -19,7 +19,7 @@ function StageView:instance(_obj, _stage)
   local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _SETTLEMENT = love.graphics.newImage("assets/textures/settlement.png")
 
-  local _debug = false
+  local _debug = {}
 
   local _clicked = {}
   local _current_settlement = nil
@@ -51,7 +51,10 @@ function StageView:instance(_obj, _stage)
   end
 
   function update(dt)
-    _debug = love.keyboard.isDown('f1')
+    for i=1,12 do
+      local key = 'f'..i
+      _debug[key] = love.keyboard.isDown(key)
+    end
     for k,v in pairs(_clicked) do
       local clicked = _clicked[k] - dt
       _clicked[k] = clicked > 0 and clicked or nil
@@ -94,11 +97,20 @@ function StageView:instance(_obj, _stage)
             g.pop()
           end
         end
-        if _debug then
+        if _debug.f1 then
           local bucket = map.getTileData(i, j, 'agents')
           if bucket then
             g.setColor(colors['pale-pink'])
             g.print(string.format("%d", bucket.n), 0, 0)
+          end
+        end
+        if _current_settlement and _debug.f2 then
+          local si, sj = _stage.settlementPos(_current_settlement)
+          local pi, pj = _stage.pathfinder().findPath(i, j, si, sj)
+          if pi and pj then
+            local di, dj = pi-i, pj-j
+            g.setColor(colors['pale-pink'])
+            g.print(string.format("%2d %2d", di, dj), 0, 0)
           end
         end
         g.pop()
