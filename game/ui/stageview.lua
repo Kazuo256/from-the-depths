@@ -19,6 +19,8 @@ function StageView:instance(_obj, _stage)
   local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _SETTLEMENT = love.graphics.newImage("assets/textures/settlement.png")
 
+  local _debug = false
+
   local _clicked = {}
   local _current_settlement = nil
 
@@ -49,6 +51,7 @@ function StageView:instance(_obj, _stage)
   end
 
   function update(dt)
+    _debug = love.keyboard.isDown('f1')
     for k,v in pairs(_clicked) do
       local clicked = _clicked[k] - dt
       _clicked[k] = clicked > 0 and clicked or nil
@@ -91,7 +94,7 @@ function StageView:instance(_obj, _stage)
             g.pop()
           end
         end
-        if _current_settlement then
+        if _debug and _current_settlement then
           local si, sj = unpack(_stage.settlementPos(_current_settlement))
           local dist = _stage.pathfinder().dist(i, j, si, sj)
           if dist then
