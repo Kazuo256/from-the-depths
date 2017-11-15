@@ -87,13 +87,15 @@ function PathFinder:instance(_obj, _map)
         break
       end
 
+      local current_cost = _get(cost, cur_i, cur_j)
+      if current_cost and current_cost > halt_cost then
+        return false
+      end
+
       for _,neighbor in ipairs(_NEIGHBORS) do
         local nex_i, nex_j = cur_i + neighbor[1], cur_j + neighbor[2]
         if _map.passablePos(nex_i, nex_j) then
           local previous_cost = _get(cost, nex_i, nex_j)
-          if previous_cost and previous_cost > halt_cost then
-            return false
-          end
           local new_cost = _get(cost, cur_i, cur_j)
                          + _dist(cur_i, cur_j, nex_i, nex_j)
                          + extra_cost(nex_i, nex_j)

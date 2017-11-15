@@ -94,6 +94,13 @@ function StageView:instance(_obj, _stage)
             g.pop()
           end
         end
+        if _debug then
+          local bucket = map.getTileData(i, j, 'agents')
+          if bucket then
+            g.setColor(colors['pale-pink'])
+            g.print(string.format("%d", bucket.n), 0, 0)
+          end
+        end
         g.pop()
       end
     end

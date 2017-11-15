@@ -6,6 +6,7 @@ local vec2    = require 'cpml' .vec2
 local setfenv = setfenv
 local unpack  = unpack
 local ipairs  = ipairs
+local print   = print
 
 function Agent:instance(_obj, _specname)
 
@@ -45,7 +46,8 @@ function Agent:instance(_obj, _specname)
     local pi, pj = pathfinder.findPath(
       si, sj, ti, tj,
       function (i, j)
-        return map.getTileData(i, j, 'agents')
+        local n = map.getTileData(i, j, 'agents').n
+        return n
       end,
       dist+10
     )

@@ -44,9 +44,25 @@ function Stage:instance(_obj, _specname)
     local w, h = _map.size()
     for i=1,h do
       for j=1,w do
-        _map.setTileData(i, j, 'agents', 0)
+        _map.setTileData(i, j, 'agents', { n = 0 })
       end
     end
+  end
+
+  local function _bucket(i, j)
+    return _map.getTileData(i, j, 'agents')
+  end
+
+  local function _bucketAgent(agent, i, j)
+    local bucket = _bucket(i, j)
+    bucket[agent] = true
+    bucket.n = bucket.n + 1
+  end
+
+  local function _unbucketAgent(agent, i, j)
+    local bucket = _bucket(i, j)
+    bucket[agent] = nil
+    bucket.n = bucket.n - 1
   end
 
   local function _addAgent(spawn, i, j)
@@ -56,7 +72,7 @@ function Stage:instance(_obj, _specname)
     agent.setPos(point)
     agent.setTarget(target)
     table.insert(_agents, agent)
-    _map.addTileData(i, j, 'agents', 1)
+    _bucketAgent(agent, i, j)
   end
 
   function eachAgent()
@@ -118,9 +134,9 @@ function Stage:instance(_obj, _specname)
 
     -- Move and remove agents
     local removed = {}
+    local moved = {}
     for k,agent in ipairs(_agents) do
       local oi, oj = _map.point2pos(agent.pos())
-      _map.addTileData(oi, oj, 'agents', -1)
       local dir = (agent.getIntention(_map, _pathfinder) + repulsion[agent])
                   :normalize()
       local dir_h = vec2(dir.x,0)
@@ -137,12 +153,23 @@ function Stage:instance(_obj, _specname)
       local ti, tj = agent.target()
       if pi == ti and pj == tj and _map.getTileData(pi, pj, 'settlement') then
         table.insert(removed, k)
+        _unbucketAgent(agent, oi, oj)
       else
-        _map.addTileData(pi, pj, 'agents', 1)
+        table.insert(moved, {agent, {oi, oj}, {pi, pj}})
       end
     end
     for n,k in ipairs(removed) do
-      table.remove(_agents, k - n + 1)
+      local agent = table.remove(_agents, k - n + 1)
+      local pi, pj = _map.point2pos(agent.pos())
+    end
+    for _,move in ipairs(moved) do
+      local agent, from, to = unpack(move)
+      local fi, fj = unpack(from)
+      local ti, tj = unpack(to)
+      if fi ~= ti or fj ~= tj then
+        _unbucketAgent(agent, fi, fj)
+        _bucketAgent(agent, ti, tj)
+      end
     end
   end
 
