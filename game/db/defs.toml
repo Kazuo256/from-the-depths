@@ -6,6 +6,7 @@ tile-size = 64
 [gameplay]
 
 spawn-delay = 0.5
+pathfinding-delay = 1
 neighbors = [
   [-1, -1], [-1, 0], [-1, 1],
   [0, -1], [0, 1],

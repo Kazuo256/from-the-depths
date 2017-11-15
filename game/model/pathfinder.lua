@@ -6,15 +6,19 @@ local PathFinder  = require 'lux.class' :new{}
 local setfenv = setfenv
 local unpack  = unpack
 local ipairs  = ipairs
+local pairs   = pairs
 local print   = print
 
 function PathFinder:instance(_obj, _map)
 
   setfenv(1, _obj)
 
-  local _NEIGHBORS = DB.load('defs')['gameplay']['neighbors']
+  local _NEIGHBORS  = DB.load('defs')['gameplay']['neighbors']
+  local _DELAY      = DB.load('defs')['gameplay']['pathfinding-delay']
 
   local _frontier = Heap()
+  local _paths    = {}
+  local _count    = _DELAY
 
   local function _get(tiles, i, j)
     return tiles[_map.pos2index(i, j)]
@@ -64,6 +68,20 @@ function PathFinder:instance(_obj, _map)
       end
     end
     return _map.setTileData(i, j, 'paths', from)
+  end
+
+  function registerOrigin(tag, origin)
+    _paths[tag] = origin
+  end
+
+  function updatePaths(dt)
+    _count = _count + dt
+    if _count > _DELAY then
+      _count = 0
+      for _,origin in pairs(_paths) do
+        generatePaths(origin.pos[1], origin.pos[2], origin.extra)
+      end
+    end
   end
 
   function findPath(si, sj, ti, tj)

@@ -27,7 +27,6 @@ function Stage:instance(_obj, _specname)
 
   local _map        = Map(_spec['map'])
   local _pathfinder = PathFinder(_map)
-  local _dirty      = true
 
   function map()
     return _map
@@ -74,7 +73,6 @@ function Stage:instance(_obj, _specname)
     agent.setTarget(target)
     table.insert(_agents, agent)
     _bucketAgent(agent, i, j)
-    _dirty = true
   end
 
   function eachAgent()
@@ -91,6 +89,21 @@ function Stage:instance(_obj, _specname)
     local i, j = unpack(pos)
     _settlements[settlement] = pos
     _map.setTileData(i, j, 'settlement', settlement)
+    _pathfinder.registerOrigin(settlement, {
+      pos = pos,
+      extra = function (i, j)
+        local n = 0
+        for agent in pairs(_map.getTileData(i, j, 'agents')) do
+          if agent ~= 'n' then
+            local oi, oj = agent.target()
+            if oi ~= pos[1] or oj ~= pos[2] then
+              n = n + 3
+            end
+          end
+        end
+        return n
+      end
+    })
   end
 
   for _,settlementspec in ipairs(_spec['settlements']) do
@@ -119,26 +132,7 @@ function Stage:instance(_obj, _specname)
     end
 
     -- Trace tactical paths
-    if _dirty then
-      _dirty = false
-      for settlement,pos in pairs(_settlements) do
-        _pathfinder.generatePaths(
-          pos[1], pos[2],
-          function (i, j)
-            local n = 0
-            for agent in pairs(_map.getTileData(i, j, 'agents')) do
-              if agent ~= 'n' then
-                local oi, oj = agent.target()
-                if oi ~= pos[1] or oj ~= pos[2] then
-                  n = n + 3
-                end
-              end
-            end
-            return n
-          end
-        )
-      end
-    end
+    _pathfinder.updatePaths(dt)
 
     -- Repel packed agents
     local repulsion = {}
@@ -185,7 +179,6 @@ function Stage:instance(_obj, _specname)
     for n,k in ipairs(removed) do
       local agent = table.remove(_agents, k - n + 1)
       local pi, pj = _map.point2pos(agent.pos())
-      _dirty = true
     end
     for _,move in ipairs(moved) do
       local agent, from, to = unpack(move)
@@ -194,7 +187,6 @@ function Stage:instance(_obj, _specname)
       if fi ~= ti or fj ~= tj then
         _unbucketAgent(agent, fi, fj)
         _bucketAgent(agent, ti, tj)
-        _dirty = true
       end
     end
   end
