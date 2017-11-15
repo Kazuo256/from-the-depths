@@ -75,8 +75,8 @@ function Map:instance(_obj, _spec)
     end
   end
 
-  function passable(pos)
-    local index = _point2index(pos)
+  function passable(point)
+    local index = _point2index(point)
     return index and _tiles[index].spec['passable']
   end
 
