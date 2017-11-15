@@ -121,7 +121,16 @@ function Stage:instance(_obj, _specname)
       _pathfinder.generatePaths(
         pos[1], pos[2],
         function (i, j)
-          return 0
+          local n = 0
+          for agent in pairs(_map.getTileData(i, j, 'agents')) do
+            if agent ~= 'n' then
+              local oi, oj = agent.target()
+              if oi ~= pos[1] or oj ~= pos[2] then
+                n = n + 3
+              end
+            end
+          end
+          return n
         end
       )
     end
