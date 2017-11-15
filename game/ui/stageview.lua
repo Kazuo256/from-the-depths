@@ -1,6 +1,7 @@
 
 local DB        = require 'db'
 local MOUSE     = require 'ui.mouse'
+local vec2      = require 'cpml' .vec2
 local StageView = require 'lux.class' :new{}
 
 local setfenv = setfenv
@@ -14,9 +15,11 @@ function StageView:instance(_obj, _stage)
 
   local _TILESIZE = DB.load('defs')['tile-size']
   local _clicked = {}
+  local _campos = vec2(0,0)
+  local _camspd = vec2(0,0)
 
   local function _tileClicked(i, j, mbutton)
-    local mpos = MOUSE.pos() * (1/_TILESIZE)
+    local mpos = (MOUSE.pos() - _campos) * (1/_TILESIZE)
     local mi, mj = _stage.map().point2pos(mpos)
     return MOUSE.clicked(mbutton) and mi == i and mj == j
   end
@@ -40,6 +43,11 @@ function StageView:instance(_obj, _stage)
       local clicked = _clicked[k] - dt
       _clicked[k] = clicked > 0 and clicked or nil
     end
+    if MOUSE.down(3) then
+      _camspd = _camspd + MOUSE.motion() * 8
+    end
+    _campos = _campos + _camspd * dt
+    _camspd = _camspd - _camspd * 0.1
   end
 
   function draw()
@@ -48,6 +56,8 @@ function StageView:instance(_obj, _stage)
     local map = _stage.map()
     g.setBackgroundColor(colors['charleston-green'])
     local w,h = map.size()
+    g.push()
+    g.translate(_campos:unpack())
     for i=1,h do
       for j=1,w do
         g.push()
@@ -75,6 +85,7 @@ function StageView:instance(_obj, _stage)
       g.polygon('fill', 0, -8, 8, 8, -8, 8)
       g.pop()
     end
+    g.pop()
   end
 
 end

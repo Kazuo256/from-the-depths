@@ -40,6 +40,10 @@ function love.load()
   _selected = nil
 end
 
+function love.mousemoved(x, y, dx, dy, istouch)
+  MOUSE.move(vec2(dx, dy))
+end
+
 function love.update(dt)
   _view.update(dt)
   _lag = _lag + dt
@@ -55,6 +59,7 @@ function love.update(dt)
         _selected.requestSpawn(10, pos)
       end
     end
+    MOUSE.clear()
   end
 end
 

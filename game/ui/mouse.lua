@@ -2,23 +2,40 @@
 local vec2  = require 'cpml' .vec2
 local MOUSE = {}
 
-local _mouse_down = { false, false }
-local _mouse_clicked = { false, false }
+local _down = { false, false }
+local _clicked = { false, false }
+local _motion = vec2(0,0)
+
+function MOUSE.move(motion)
+  _motion = _motion + motion
+end
 
 function MOUSE.update(dt)
-  for i=1,2 do
-    local last = _mouse_down[i]
-    _mouse_down[i] = love.mouse.isDown(i)
-    _mouse_clicked[i] = _mouse_down[i] and not last
+  for i=1,3 do
+    local last = _down[i]
+    _down[i] = love.mouse.isDown(i)
+    _clicked[i] = _down[i] and not last
   end
+end
+
+function MOUSE.clear(dt)
+  _motion = vec2(0,0)
+end
+
+function MOUSE.down(i)
+  return _down[i]
 end
 
 function MOUSE.pos()
   return vec2(love.mouse.getPosition())
 end
 
+function MOUSE.motion()
+  return _motion
+end
+
 function MOUSE.clicked(i)
-  return _mouse_clicked[i]
+  return _clicked[i]
 end
 
 return MOUSE
