@@ -89,6 +89,21 @@ function Stage:instance(_obj, _specname)
     local i, j = unpack(pos)
     _settlements[settlement] = pos
     _map.setTileData(i, j, 'settlement', settlement)
+    _pathfinder.registerOrigin(settlement, {
+      pos = pos,
+      extra = function (i, j)
+        local n = 0
+        for agent in pairs(_map.getTileData(i, j, 'agents')) do
+          if agent ~= 'n' then
+            local oi, oj = agent.target()
+            if oi ~= pos[1] or oj ~= pos[2] then
+              n = n + 3
+            end
+          end
+        end
+        return n
+      end
+    })
   end
 
   for _,settlementspec in ipairs(_spec['settlements']) do
@@ -100,7 +115,7 @@ function Stage:instance(_obj, _specname)
   end
 
   function settlementPos(settlement)
-    return _settlements[settlement]
+    return unpack(_settlements[settlement])
   end
 
   --[[ Overall Logic ]]--
@@ -115,6 +130,9 @@ function Stage:instance(_obj, _specname)
         _addAgent(spawn, i, j)
       end
     end
+
+    -- Trace tactical paths
+    _pathfinder.updatePaths(dt)
 
     -- Repel packed agents
     local repulsion = {}
