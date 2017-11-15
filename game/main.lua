@@ -30,10 +30,14 @@ local _lag
 local _stage
 local _view
 
-local _sepected
+local _selected
+local _BGM
 
 function love.load()
   _FRAME = 1 / DB.load('defs')['fps']
+  _BGM = love.audio.newSource('assets/bgm/Socapex - Tokyo Chase.ogg')
+  _BGM:setLooping(true)
+  _BGM:play()
   _lag = 0
   _stage = Stage('test')
   _view = StageView(_stage)
