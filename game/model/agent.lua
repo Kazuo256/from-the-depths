@@ -26,6 +26,10 @@ function Agent:instance(_obj, _specname)
     _pos = pos
   end
 
+  function target()
+    return _target
+  end
+
   function setTarget(target)
     _target = target
   end

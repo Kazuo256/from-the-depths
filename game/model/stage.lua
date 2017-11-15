@@ -93,7 +93,8 @@ function Stage:instance(_obj, _specname)
       repulsion[agent] = rep
     end
 
-    for _,agent in ipairs(_agents) do
+    local removed = {}
+    for k,agent in ipairs(_agents) do
       local dir = (agent.getIntention() + repulsion[agent]):normalize()
       local dir_h = vec2(dir.x,0)
       local dir_v = vec2(0,dir.y)
@@ -105,6 +106,14 @@ function Stage:instance(_obj, _specname)
           break
         end
       end
+      local pi, pj = _map.point2pos(agent.pos())
+      local ti, tj = _map.point2pos(agent.target())
+      if pi == ti and pj == tj and _map.getTileData(pi, pj, 'settlement') then
+        table.insert(removed, k)
+      end
+    end
+    for n,k in ipairs(removed) do
+      table.remove(_agents, k - n + 1)
     end
   end
 
