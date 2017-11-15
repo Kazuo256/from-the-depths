@@ -40,19 +40,9 @@ function Agent:instance(_obj, _specname)
 
   function getIntention(map, pathfinder)
     local pi, pj = map.point2pos(_pos)
-    local ti, tj = target()
-    local min
-    local tgt
-    for _,neigh in ipairs(_NEIGHBORS) do
-      local i,j = pi + neigh[1], pj + neigh[2]
-      local dist = pathfinder.dist(i, j, ti, tj)
-      if dist and (not min or dist < min) then
-        min = dist
-        tgt = {i,j}
-      end
-    end
-    if tgt then
-      local target = map.pos2point(unpack(tgt))
+    local ti, tj = pathfinder.findPath(pi, pj, target())
+    if ti and tj then
+      local target = map.pos2point(ti, tj)
       local dir = vec2(0, 0)
       local dist = target - _pos
       if dist:len2() > 0.001 then

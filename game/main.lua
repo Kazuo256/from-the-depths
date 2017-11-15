@@ -56,7 +56,7 @@ function love.update(dt)
         _selected = settlement
       end
       if _selected and _view.targetSelected(settlement, unpack(pos)) then
-        _selected.requestSpawn(1, pos)
+        _selected.requestSpawn(10, pos)
       end
     end
     MOUSE.clear()
