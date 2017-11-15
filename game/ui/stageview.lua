@@ -94,14 +94,6 @@ function StageView:instance(_obj, _stage)
             g.pop()
           end
         end
-        if _debug and _current_settlement then
-          local si, sj = unpack(_stage.settlementPos(_current_settlement))
-          local dist = _stage.pathfinder().dist(i, j, si, sj)
-          if dist then
-            g.setColor(colors['pale-pink'])
-            g.print(string.format("%.2f", dist), 0, 0)
-          end
-        end
         g.pop()
       end
     end
