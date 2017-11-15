@@ -14,6 +14,7 @@ function StageView:instance(_obj, _stage)
   setfenv(1, _obj)
 
   local _TILESIZE = DB.load('defs')['tile-size']
+  local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _clicked = {}
   local _campos = vec2(0,0)
   local _camspd = vec2(0,0)
@@ -64,7 +65,7 @@ function StageView:instance(_obj, _stage)
         g.translate((j-1)*_TILESIZE, (i-1)*_TILESIZE)
         g.setColor(colors['pale-gold'])
         if map.tilespec(i,j) == DB.load('tiletypes')['ruins'] then
-          g.rectangle('fill', 8, 8, _TILESIZE - 16, _TILESIZE - 16)
+          g.draw(_RUINS, 0, 0)
         end
         local settlement = map.getTileData(i, j, 'settlement')
         if settlement then

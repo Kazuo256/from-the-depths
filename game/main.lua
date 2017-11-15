@@ -12,7 +12,7 @@
 --    + [ ] Behavior class
 --  + [ ] Basic interaction??
 --    + [ ] Agent pool
---    + [ ] Deploy mechanics
+--    + [x] Deploy mechanics
 --    + [ ] Basecamp interaction
 
 require 'lib'
