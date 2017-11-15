@@ -40,12 +40,23 @@ function Stage:instance(_obj, _specname)
 
   local _agents = {}
 
-  local function _addAgent(spawn, pos)
+  do -- Initialize agent count per tile
+    local w, h = _map.size()
+    for i=1,h do
+      for j=1,w do
+        _map.setTileData(i, j, 'agents', 0)
+      end
+    end
+  end
+
+  local function _addAgent(spawn, i, j)
     local specname, target = unpack(spawn)
     local agent = Agent(specname)
-    agent.setPos(pos)
+    local point = _map.pos2point(i,j)
+    agent.setPos(point)
     agent.setTarget(target)
     table.insert(_agents, agent)
+    _map.addTileData(i, j, 'agents', 1)
   end
 
   function eachAgent()
@@ -79,14 +90,17 @@ function Stage:instance(_obj, _specname)
   --[[ Overall Logic ]]--
   
   function tick(dt)
+    -- Spawn agents
     for settlement,pos in pairs(_settlements) do
       local i, j = unpack(pos)
       settlement.tick(dt)
       local spawn = settlement.nextSpawn()
       if spawn then
-        _addAgent(spawn, _map.pos2point(i,j))
+        _addAgent(spawn, i, j)
       end
     end
+
+    -- Repel packed agents
     local repulsion = {}
     local colradius = _PHYSDEFS['collision-radius']
     local repfactor = _PHYSDEFS['repulsion-factor']
@@ -102,8 +116,11 @@ function Stage:instance(_obj, _specname)
       repulsion[agent] = rep
     end
 
+    -- Move and remove agents
     local removed = {}
     for k,agent in ipairs(_agents) do
+      local oi, oj = _map.point2pos(agent.pos())
+      _map.addTileData(oi, oj, 'agents', -1)
       local dir = (agent.getIntention(_map, _pathfinder) + repulsion[agent])
                   :normalize()
       local dir_h = vec2(dir.x,0)
@@ -120,6 +137,8 @@ function Stage:instance(_obj, _specname)
       local ti, tj = agent.target()
       if pi == ti and pj == tj and _map.getTileData(pi, pj, 'settlement') then
         table.insert(removed, k)
+      else
+        _map.addTileData(pi, pj, 'agents', 1)
       end
     end
     for n,k in ipairs(removed) do

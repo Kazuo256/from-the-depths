@@ -79,6 +79,13 @@ function Map:instance(_obj, _spec)
     end
   end
 
+  function addTileData(i, j, key, value)
+    local index = _inside(i,j) and _index(i,j)
+    if index then
+      _tiles[index][key] = _tiles[index][key] + value
+    end
+  end
+
   function passablePos(i, j)
     local index = _index(i, j)
     return index and _tiles[index].spec['passable']
