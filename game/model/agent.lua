@@ -44,23 +44,6 @@ function Agent:instance(_obj, _specname)
     local ti, tj = target()
     local si, sj = map.point2pos(_pos)
     local pi, pj = pathfinder.findPath(si, sj, ti, tj)
-    --local dist = pathfinder.dist(si, sj, ti, tj)
-    --local pi, pj = pathfinder.findPath(
-    --  si, sj, ti, tj,
-    --  function (i, j)
-    --    local n = 0
-    --    for other in pairs(map.getTileData(i, j, 'agents')) do
-    --      if other ~= 'n' then
-    --        local oi, oj = other.target()
-    --        if oi ~= ti or oj ~= tj then
-    --          n = n + 3
-    --        end
-    --      end
-    --    end
-    --    return n
-    --  end,
-    --  dist+20
-    --)
     if pi and pj then
       local target = map.pos2point(pi, pj)
       local dir = vec2(0, 0)
