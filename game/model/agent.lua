@@ -40,7 +40,7 @@ function Agent:instance(_obj, _specname)
 
   function getIntention(map, pathfinder)
     local pi, pj = map.point2pos(_pos)
-    local ti, tj = pathfinder.findPath(pi, pj, target())
+    local ti, tj = pathfinder.findPath(nil, pi, pj, target())
     if ti and tj then
       local target = map.pos2point(ti, tj)
       local dir = vec2(0, 0)

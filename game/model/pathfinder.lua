@@ -40,9 +40,10 @@ function PathFinder:instance(_obj, _map)
     return (di*di + dj*dj) ^ 0.5
   end
 
-  function findPath(si, sj, ti, tj)
+  function findPath(extra_cost, si, sj, ti, tj)
     local cost = _newGrid()
     local from = _newGrid()
+    extra_cost = extra_cost or function() return 0 end
     _frontier.clear()
     _frontier.push({si,sj}, 0)
     _set(cost, 0, si, sj)
@@ -58,6 +59,7 @@ function PathFinder:instance(_obj, _map)
         if _map.passablePos(nex_i, nex_j) then
           local new_cost = _get(cost, cur_i, cur_j)
                          + _dist(cur_i, cur_j, nex_i, nex_j)
+                         + extra_cost(nex_i, nex_j)
           local previous_cost = _get(cost, nex_i, nex_j)
           if not previous_cost or new_cost < previous_cost then
             local priority = new_cost + _dist(nex_i, nex_j, ti, tj)
