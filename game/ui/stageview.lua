@@ -8,6 +8,8 @@ local setfenv = setfenv
 local love    = love
 local print   = print
 local pairs   = pairs
+local unpack  = unpack
+local string  = string
 
 function StageView:instance(_obj, _stage)
 
@@ -16,7 +18,12 @@ function StageView:instance(_obj, _stage)
   local _TILESIZE = DB.load('defs')['tile-size']
   local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _SETTLEMENT = love.graphics.newImage("assets/textures/settlement.png")
+
   local _clicked = {}
+  local _current_settlement = nil
+
+  --[[ Camera ]]--
+
   local _campos = vec2(0,0)
   local _camspd = vec2(0,0)
 
@@ -29,6 +36,7 @@ function StageView:instance(_obj, _stage)
   function settlementSelected(settlement, i, j)
     if _tileClicked(i, j, 1) then
       _clicked[settlement] = 0.2
+      _current_settlement = settlement
       return true
     end
   end
@@ -72,14 +80,23 @@ function StageView:instance(_obj, _stage)
         if settlement then
           g.setColor(colors['tiffany-blue'])
           g.draw(_SETTLEMENT, 0, 0)
-          local clicked = _clicked[settlement]
-          if clicked then
+          if _current_settlement == settlement then
+            local clicked = _clicked[settlement] or 0
             g.push()
+            g.setColor(colors['pale-pink'])
             g.translate(_TILESIZE/2, _TILESIZE/2)
             g.scale(1 + clicked, 1 + clicked)
             g.rectangle('line', -_TILESIZE/2, -_TILESIZE/2,
                                 _TILESIZE, _TILESIZE)
             g.pop()
+          end
+        end
+        if _current_settlement then
+          local si, sj = unpack(_stage.settlementPos(_current_settlement))
+          local dist = _stage.pathfinder().dist(i, j, si, sj)
+          if dist then
+            g.setColor(colors['pale-pink'])
+            g.print(string.format("%.2f", dist), 0, 0)
           end
         end
         g.pop()

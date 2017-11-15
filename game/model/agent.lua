@@ -4,15 +4,18 @@ local Agent = require 'lux.class' :new{}
 
 local vec2    = require 'cpml' .vec2
 local setfenv = setfenv
+local unpack  = unpack
 
 function Agent:instance(_obj, _specname)
 
   setfenv(1, _obj)
 
+  local _NEIGHBORS = DB.load('defs')['gameplay']['neighbors']
+
   _specname     = 'agents/' .. _specname
   local _spec   = DB.load(_specname)
   local _pos    = vec2(0, 0)
-  local _target = vec2(0, 0)
+  local _target = {1,1}
 
   function speed()
     return _spec['speed']
@@ -27,16 +30,17 @@ function Agent:instance(_obj, _specname)
   end
 
   function target()
-    return _target
+    return unpack(_target)
   end
 
   function setTarget(target)
     _target = target
   end
 
-  function getIntention()
+  function getIntention(map, pathfinder)
+    local target = map.pos2point(unpack(_target))
     local dir = vec2(0, 0)
-    local dist = _target - _pos
+    local dist = target - _pos
     if dist:len2() > 0.001 then
       dir = dist:normalize()
     end
