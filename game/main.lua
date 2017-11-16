@@ -1,19 +1,21 @@
 
 --- TODO list
---  + [x] Basic physics
---    + [x] Fixed-frame update
---    + [x] Delegate movement to map
---    + [x] Tile collision
---    + [x] Inter-agent repulsion
---  + [ ] Basic intelligent movement
---    + [x] Heap
---    + [x] A* algorithm
---    + [x] pathfinding agents
+--  + Infra
 --    + [ ] Behavior class
---  + [ ] Basic interaction??
+--  + Basic interaction??
 --    + [ ] Agent pool
 --    + [x] Deploy mechanics
 --    + [ ] Basecamp interaction
+--  + Economy
+--    + [ ] Supply sources
+--    + [ ] Supply transport
+--    + [ ] Supply harvest
+--    + [ ] Currency reward
+--  + Monsters
+--    + [ ] Nests
+--    + [ ] Periodic spawn
+--    + [ ] Assaults
+--    + [ ] Gem cycle
 
 require 'lib'
 
