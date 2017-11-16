@@ -42,6 +42,7 @@ function Agent:instance(_obj, _specname, _stage)
     local map         = _stage.map()
     local pathfinder  = _stage.pathfinder()
     local ti, tj      = _behavior.nextTarget()
+    if not ti or not tj then return vec2(0,0) end
     local si, sj      = map.point2pos(_pos)
     local pi, pj      = pathfinder.findPath(si, sj, ti, tj)
     if pi and pj then

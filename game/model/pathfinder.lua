@@ -67,7 +67,8 @@ function PathFinder:instance(_obj, _map)
         end
       end
     end
-    return _map.setTileData(i, j, 'paths', from)
+    _map.setTileData(i, j, 'paths', from)
+    _map.setTileData(i, j, 'dists', cost)
   end
 
   function registerOrigin(tag, origin)
@@ -86,7 +87,11 @@ function PathFinder:instance(_obj, _map)
   end
 
   function findPath(si, sj, ti, tj)
-    return unpack(_get(_map.getTileData(ti, tj, 'paths'), si, sj) or {})
+    return unpack(_get(_map.getTileData(ti, tj, 'paths') or {}, si, sj) or {})
+  end
+
+  function dist(si, sj, ti, tj)
+    return _get(_map.getTileData(ti, tj, 'dists') or {}, si, sj)
   end
 
 end

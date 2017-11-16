@@ -8,6 +8,7 @@ local ipairs    = ipairs
 local assert    = assert
 local table     = table
 local coroutine = coroutine
+local print     = print
 
 function Behavior:instance(_obj, _specname, _agent, _stage)
 

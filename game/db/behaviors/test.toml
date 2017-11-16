@@ -3,5 +3,15 @@ root = "default"
 
 [[tasks]]
 id = "default"
+typename = "selector"
+
+[[tasks]]
+id = "wander"
 typename = "random"
+parent = "default"
+
+[[tasks]]
+id = "giveup"
+typename = "wait"
+parent = "default"
 

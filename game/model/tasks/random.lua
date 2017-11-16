@@ -10,11 +10,16 @@ function TASK.run(agent, stage, children)
     table.insert(settlements, settlement)
     n = n + 1
   end
+  local pi, pj = stage.map().point2pos(agent.pos())
   local chosen = settlements[love.math.random(n)]
   local ti, tj = stage.settlementPos(chosen)
+  local dist = stage.pathfinder().dist(pi, pj, ti, tj) or 999
+  if dist > 20 then
+    return false
+  end
   repeat
+    pi, pj = stage.map().point2pos(agent.pos())
     yield(ti, tj)
-    local pi, pj = stage.map().point2pos(agent.pos())
   until pi == ti and pj == tj
   return true
 end
