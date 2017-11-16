@@ -35,7 +35,7 @@ function Behavior:instance(_obj, _specname, _agent, _stage)
     end
   end
 
-  local _run = coroutine.create(_routine)
+  local _run = coroutine.wrap(_routine)
 
   function nextTarget()
     return _run()

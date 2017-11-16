@@ -20,7 +20,7 @@ function Agent:instance(_obj, _specname, _stage)
   local _spec     = DB.load(_specname)
   local _behavior = Behavior(_spec['behavior'], _obj, _stage)
   local _pos      = vec2(0, 0)
-  local _target   = {1,1}
+  local _target   = nil
 
   function speed()
     return _spec['speed']
@@ -35,20 +35,17 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function target()
-    return unpack(_target)
-  end
-
-  function setTarget(ti, tj)
-    _target = {ti, tj}
+    return _target and unpack(_target)
   end
 
   function getIntention()
     local map         = _stage.map()
     local pathfinder  = _stage.pathfinder()
-    local ti, tj      = target()
+    local ti, tj      = _behavior.nextTarget()
     local si, sj      = map.point2pos(_pos)
     local pi, pj      = pathfinder.findPath(si, sj, ti, tj)
     if pi and pj then
+      _target = {ti, tj}
       local target = map.pos2point(pi, pj)
       local dir = vec2(0, 0)
       local dist = target - _pos

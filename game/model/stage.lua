@@ -65,13 +65,10 @@ function Stage:instance(_obj, _specname)
     bucket.n = bucket.n - 1
   end
 
-  local function _addAgent(spawn, i, j)
-    local specname, target = unpack(spawn)
-    local ti, tj = unpack(target)
+  local function _addAgent(specname, i, j)
     local agent = Agent(specname, _obj)
     local point = _map.pos2point(i,j)
     agent.setPos(point)
-    agent.setTarget(ti, tj)
     table.insert(_agents, agent)
     _bucketAgent(agent, i, j)
   end
@@ -171,9 +168,6 @@ function Stage:instance(_obj, _specname)
       end
       local pi, pj = _map.point2pos(agent.pos())
       table.insert(moved, {agent, {oi, oj}, {pi, pj}})
-      local ti, tj = agent.target()
-      if pi == ti and pj == tj and _map.getTileData(pi, pj, 'settlement') then
-      end
     end
     for _,move in ipairs(moved) do
       local agent, from, to = unpack(move)
