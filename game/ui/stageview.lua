@@ -16,6 +16,7 @@ function StageView:instance(_obj, _stage)
   setfenv(1, _obj)
 
   local _TILESIZE = DB.load('defs')['tile-size']
+  local _WIDTH = 1280 - DB.load('defs')['interface']['hud-width']
   local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _SETTLEMENT = love.graphics.newImage("assets/textures/settlement.png")
 
@@ -32,7 +33,9 @@ function StageView:instance(_obj, _stage)
   local function _tileClicked(i, j, mbutton)
     local mpos = (MOUSE.pos() - _campos) * (1/_TILESIZE)
     local mi, mj = _stage.map().point2pos(mpos)
-    return MOUSE.clicked(mbutton) and mi == i and mj == j
+    return MOUSE.within(0, 0, _WIDTH, 720)
+       and MOUSE.clicked(mbutton)
+       and mi == i and mj == j
   end
 
   function settlementSelected(settlement, i, j)
@@ -59,7 +62,7 @@ function StageView:instance(_obj, _stage)
       local clicked = _clicked[k] - dt
       _clicked[k] = clicked > 0 and clicked or nil
     end
-    if MOUSE.down(3) then
+    if MOUSE.within(0, 0, _WIDTH, 720) and MOUSE.down(3) then
       _camspd = _camspd + MOUSE.motion() * 8
     end
     _campos = _campos + _camspd * dt

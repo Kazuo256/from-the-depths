@@ -23,6 +23,7 @@ local DB        = require 'db'
 local MOUSE     = require 'ui.mouse'
 local Stage     = require 'model.stage'
 local StageView = require 'ui.stageview'
+local HUD       = require 'ui.hud'
 
 local vec2      = require 'cpml' .vec2
 
@@ -31,6 +32,7 @@ local _lag
 
 local _stage
 local _view
+local _hud
 
 local _selected
 local _BGM
@@ -43,6 +45,7 @@ function love.load()
   _lag = 0
   _stage = Stage('test')
   _view = StageView(_stage)
+  _hud = HUD()
   _selected = nil
 end
 
@@ -71,5 +74,6 @@ end
 
 function love.draw()
   _view.draw()
+  _hud.draw()
 end
 

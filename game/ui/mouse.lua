@@ -30,6 +30,13 @@ function MOUSE.pos()
   return vec2(love.mouse.getPosition())
 end
 
+function MOUSE.within(x, y, w, h)
+  local mx, my = love.mouse.getPosition()
+  if mx < x or mx > x+w then return false end
+  if my < y or my > y+h then return false end
+  return true
+end
+
 function MOUSE.motion()
   return _motion
 end
