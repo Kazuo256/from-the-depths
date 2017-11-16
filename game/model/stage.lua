@@ -67,10 +67,11 @@ function Stage:instance(_obj, _specname)
 
   local function _addAgent(spawn, i, j)
     local specname, target = unpack(spawn)
-    local agent = Agent(specname)
+    local ti, tj = unpack(target)
+    local agent = Agent(specname, _obj)
     local point = _map.pos2point(i,j)
     agent.setPos(point)
-    agent.setTarget(target)
+    agent.setTarget(ti, tj)
     table.insert(_agents, agent)
     _bucketAgent(agent, i, j)
   end
@@ -153,7 +154,6 @@ function Stage:instance(_obj, _specname)
     end
 
     -- Move and remove agents
-    local removed = {}
     local moved = {}
     for k,agent in ipairs(_agents) do
       local oi, oj = _map.point2pos(agent.pos())
@@ -170,17 +170,10 @@ function Stage:instance(_obj, _specname)
         end
       end
       local pi, pj = _map.point2pos(agent.pos())
+      table.insert(moved, {agent, {oi, oj}, {pi, pj}})
       local ti, tj = agent.target()
       if pi == ti and pj == tj and _map.getTileData(pi, pj, 'settlement') then
-        table.insert(removed, k)
-        _unbucketAgent(agent, oi, oj)
-      else
-        table.insert(moved, {agent, {oi, oj}, {pi, pj}})
       end
-    end
-    for n,k in ipairs(removed) do
-      local agent = table.remove(_agents, k - n + 1)
-      local pi, pj = _map.point2pos(agent.pos())
     end
     for _,move in ipairs(moved) do
       local agent, from, to = unpack(move)
