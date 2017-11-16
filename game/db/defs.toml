@@ -17,17 +17,20 @@ neighbors = [
 collision-radius = 0.5
 repulsion-factor = 0.125
 
-[interface]
+[interface.sidebar]
 
-hud-width = 400
+width = 240
+margin = 16
 
 [colors]
 
 # Pallete: https://coolors.co/17bebb-2e282a-cd5334-edb88b-fad8d6
+#        + https://coolors.co/17bebb-2e282a-cd5334-edb88b-0a100d
 
 tiffany-blue = [23, 190, 187, 255]
 charleston-green = [46, 40, 42, 255]
 dark-coral = [205, 83, 52, 255]
 pale-gold = [237, 184, 139, 255]
 pale-pink = [250, 216, 214, 255]
+smoky-black = [10, 16, 13, 255]
 

@@ -16,7 +16,7 @@ function StageView:instance(_obj, _stage)
   setfenv(1, _obj)
 
   local _TILESIZE = DB.load('defs')['tile-size']
-  local _WIDTH = 1280 - DB.load('defs')['interface']['hud-width']
+  local _SIDEBAR = DB.load('defs')['interface']['sidebar']
   local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _SETTLEMENT = love.graphics.newImage("assets/textures/settlement.png")
 
@@ -30,10 +30,21 @@ function StageView:instance(_obj, _stage)
   local _campos = vec2(0,0)
   local _camspd = vec2(0,0)
 
+  local function _bounds()
+    local width = _SIDEBAR['width']
+    local margin = _SIDEBAR['margin']
+    return width+margin, margin,
+           1280 - width - 2*margin, 720 - 2*margin
+  end
+
+  local function _mouseWithin()
+    return MOUSE.within(_bounds())
+  end
+
   local function _tileClicked(i, j, mbutton)
     local mpos = (MOUSE.pos() - _campos) * (1/_TILESIZE)
     local mi, mj = _stage.map().point2pos(mpos)
-    return MOUSE.within(0, 0, _WIDTH, 720)
+    return _mouseWithin()
        and MOUSE.clicked(mbutton)
        and mi == i and mj == j
   end
@@ -62,20 +73,28 @@ function StageView:instance(_obj, _stage)
       local clicked = _clicked[k] - dt
       _clicked[k] = clicked > 0 and clicked or nil
     end
-    if MOUSE.within(0, 0, _WIDTH, 720) and MOUSE.down(3) then
+    if _mouseWithin() and MOUSE.down(3) then
       _camspd = _camspd + MOUSE.motion() * 8
     end
     _campos = _campos + _camspd * dt
     _camspd = _camspd - _camspd * 0.1
   end
 
+  local function _stencil()
+    local x, y, w, h = _bounds()
+    return love.graphics.rectangle('fill', x, y, w, h, 20, 20)
+  end
+
   function draw()
     local g = love.graphics
     local colors = DB.load('defs')['colors']
     local map = _stage.map()
-    g.setBackgroundColor(colors['charleston-green'])
     local w,h = map.size()
     g.push()
+    g.setColor(colors['charleston-green'])
+    g.stencil(_stencil, 'replace', 1)
+    g.setStencilTest('greater', 0)
+    g.rectangle('fill', _bounds())
     g.translate(_campos:unpack())
     for i=1,h do
       for j=1,w do
@@ -126,6 +145,7 @@ function StageView:instance(_obj, _stage)
       g.polygon('fill', 0, -8, 8, 8, -8, 8)
       g.pop()
     end
+    g.setStencilTest()
     g.pop()
   end
 

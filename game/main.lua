@@ -47,6 +47,9 @@ function love.load()
   _view = StageView(_stage)
   _hud = HUD()
   _selected = nil
+  love.graphics.setBackgroundColor(
+    DB.load('defs')['colors']['dark-coral']
+  )
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
