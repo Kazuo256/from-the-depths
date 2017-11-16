@@ -6,9 +6,9 @@
 --    + [x] Tile collision
 --    + [x] Inter-agent repulsion
 --  + [ ] Basic intelligent movement
---    + [ ] Heap
---    + [ ] A* algorithm
---    + [ ] pathfinding agents
+--    + [x] Heap
+--    + [x] A* algorithm
+--    + [x] pathfinding agents
 --    + [ ] Behavior class
 --  + [ ] Basic interaction??
 --    + [ ] Agent pool

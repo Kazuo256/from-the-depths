@@ -98,6 +98,8 @@ function Stage:instance(_obj, _specname)
             local oi, oj = agent.target()
             if oi ~= pos[1] or oj ~= pos[2] then
               n = n + 3
+            else
+              n = n + 0.1
             end
           end
         end
