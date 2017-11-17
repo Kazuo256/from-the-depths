@@ -67,12 +67,11 @@ function love.update(dt)
       if _view.settlementSelected(settlement, unpack(pos)) then
         _selected = settlement
       end
-      if _selected and _view.targetSelected(settlement, unpack(pos)) then
-        _selected.requestSpawn(1, pos)
-      end
     end
     if _hud.activateSelected(_selected) then
-      print("asd")
+      if _selected.role() == 'training' and _stage.spend(200) then
+        _selected.requestSpawn(5)
+      end
     end
     MOUSE.clear()
   end

@@ -1,4 +1,6 @@
 
+treasure = 1000
+
 [map]
 
 width = 20
@@ -32,22 +34,22 @@ tiles = """
 "#" = "ruins"
 
 [[settlements]]
-pos = [3, 3]
-action = "train"
+pos = [4, 4]
+role = "training"
 
 [[settlements]]
 pos = [11, 7]
-action = "harvest"
+role = "harvest"
 
 [[settlements]]
 pos = [15, 14]
-action = "rest"
+role = "rest"
 
 [[settlements]]
 pos = [13, 16]
-action = "rest"
+role = "rest"
 
 [[settlements]]
 pos = [16, 2]
-action = "harvest"
+role = "harvest"
 

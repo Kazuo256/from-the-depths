@@ -23,6 +23,21 @@ function Stage:instance(_obj, _specname)
   local _spec     = DB.load(_specname)
   local _PHYSDEFS = DB.load('defs')['physics']
 
+  --[[ Treasure ]]--
+  
+  local _treasure = _spec['treasure']
+
+  function treasure()
+    return _treasure
+  end
+
+  function spend(amount)
+    if amount < _treasure then
+      _treasure = _treasure - amount
+      return true
+    end
+  end
+
   --[[ Tile Map ]]--
 
   local _map        = Map(_spec['map'])
@@ -86,7 +101,7 @@ function Stage:instance(_obj, _specname)
   local _settlements  = {}
 
   local function _addSettlement(spec)
-    local settlement = Settlement(spec['action'])
+    local settlement = Settlement(spec['role'])
     local pos = spec['pos']
     local i, j = unpack(pos)
     _settlements[settlement] = pos
