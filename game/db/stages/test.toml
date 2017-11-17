@@ -33,16 +33,21 @@ tiles = """
 
 [[settlements]]
 pos = [3, 3]
+action = "train"
 
 [[settlements]]
 pos = [11, 7]
+action = "harvest"
 
 [[settlements]]
 pos = [15, 14]
+action = "rest"
 
 [[settlements]]
 pos = [13, 16]
+action = "rest"
 
 [[settlements]]
 pos = [16, 2]
+action = "harvest"
 

@@ -6,7 +6,7 @@ local Settlement  = require 'lux.class' :new{}
 local setfenv = setfenv
 local print   = print
 
-function Settlement:instance(_obj)
+function Settlement:instance(_obj, _action)
 
   setfenv(1, _obj)
 
@@ -14,6 +14,10 @@ function Settlement:instance(_obj)
   local _pending  = Queue(128)
   local _count    = 0
   local _next     = false
+
+  function action()
+    return _action
+  end
 
   function tick(dt)
     if not _pending.isEmpty() then

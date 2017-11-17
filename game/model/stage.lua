@@ -77,12 +77,16 @@ function Stage:instance(_obj, _specname)
     return ipairs(_agents)
   end
 
+  function agentCount()
+    return #_agents
+  end
+
   --[[ Settlements ]]--
 
   local _settlements  = {}
 
   local function _addSettlement(spec)
-    local settlement = Settlement()
+    local settlement = Settlement(spec['action'])
     local pos = spec['pos']
     local i, j = unpack(pos)
     _settlements[settlement] = pos

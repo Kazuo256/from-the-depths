@@ -39,13 +39,13 @@ local _BGM
 
 function love.load()
   _FRAME = 1 / DB.load('defs')['fps']
-  _BGM = love.audio.newSource('assets/bgm/Socapex - Tokyo Chase.ogg')
+  _BGM = love.audio.newSource('assets/bgm/Brain Damage.ogg')
   _BGM:setLooping(true)
   _BGM:play()
   _lag = 0
   _stage = Stage('test')
   _view = StageView(_stage)
-  _hud = HUD()
+  _hud = HUD(_stage)
   _selected = nil
   love.graphics.setBackgroundColor(
     DB.load('defs')['colors']['dark-coral']
@@ -70,6 +70,9 @@ function love.update(dt)
       if _selected and _view.targetSelected(settlement, unpack(pos)) then
         _selected.requestSpawn(1, pos)
       end
+    end
+    if _hud.activateSelected(_selected) then
+      print("asd")
     end
     MOUSE.clear()
   end
