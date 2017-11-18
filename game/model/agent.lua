@@ -42,7 +42,7 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   local _supply   = false
-  local _treasure = DB.load('defs')['gameplay']['price']['training']/2
+  local _treasure = DB.load('defs')['gameplay']['price']['training']/2/5
 
   function treasure()
     return _treasure
