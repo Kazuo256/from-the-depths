@@ -5,13 +5,43 @@ root = "default"
 id = "default"
 typename = "selector"
 
-[[tasks]]
-id = "wander"
-typename = "random"
-parent = "default"
+  [[tasks]]
+  id = "work"
+  typename = "sequence"
+  parent = "default"
+  
+    [[tasks]]
+    id = "motivated?"
+    typename = "motivated"
+    parent = "work"
+    
+    [[tasks]]
+    id = "find supply"
+    typename = "selector"
+    parent = "work"
 
-[[tasks]]
-id = "giveup"
-typename = "wait"
-parent = "default"
+      [[tasks]]
+      id = "already has"
+      typename = "supplied"
+      parent = "find supply"
+
+      [[tasks]]
+      id = "needs to collect"
+      typename = "collect"
+      parent = "find supply"
+    
+    [[tasks]]
+    id = "sell"
+    typename = "sell"
+    parent = "work"
+  
+  [[tasks]]
+  id = "rest"
+  typename = "rest"
+  parent = "default"
+  
+  [[tasks]]
+  id = "giveup"
+  typename = "wait"
+  parent = "default"
 

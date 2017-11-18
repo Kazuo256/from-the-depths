@@ -110,6 +110,7 @@ local function _updateUI()
       _hud.text(2, _selected.treasure(), 'TEXT')
       _hud.text(2, "Fatigue", 'TITLE')
       _hud.text(2, string.format("%1d/100", _selected.fatigue()), 'TEXT')
+      _hud.text(2, _selected.objective() or "lost", 'TEXT')
       if _selected.hasSupply() then
         _hud.text(2, "Carrying supply", 'TEXT')
       end
