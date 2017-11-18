@@ -34,7 +34,7 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function tire(amount)
-    _fatigue = math.min(_MAX_FATIGUE, _fatigue + amount)
+    _fatigue = math.min(2*_MAX_FATIGUE, _fatigue + amount)
   end
 
   function restore()
@@ -61,8 +61,9 @@ function Agent:instance(_obj, _specname, _stage)
 
   function speed()
     local thresh = 0.75 * _MAX_FATIGUE
-    local effective_fatigue = math.max(_fatigue, thresh) - thresh
-    return (1 - 0.9*effective_fatigue/(_MAX_FATIGUE - thresh))
+    local effective_fatigue = math.max(math.min(_fatigue, _MAX_FATIGUE), thresh)
+                            - thresh
+    return (1 - 0.5*effective_fatigue/(_MAX_FATIGUE - thresh))
          * _spec['speed']
   end
 
@@ -94,9 +95,9 @@ function Agent:instance(_obj, _specname, _stage)
     _status = 'done'
   end
 
-  function fail()
+  function fail(fatigue)
     _status = 'failed'
-    _fatigue = _fatigue + 10
+    tire(fatigue)
   end
 
   function objective()

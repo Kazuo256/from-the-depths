@@ -12,8 +12,23 @@ typename = "selector"
   
     [[tasks]]
     id = "motivated?"
-    typename = "motivated"
+    typename = "selector"
     parent = "work"
+
+      [[tasks]]
+      id = "rested"
+      typename = "rested"
+      parent = "motivated?"
+
+      [[tasks]]
+      id = "needs money"
+      typename = "not"
+      parent = "motivated?"
+
+        [[tasks]]
+        id = "enough?"
+        typename = "hastreasure"
+        parent = "needs money"
     
     [[tasks]]
     id = "find supply"
