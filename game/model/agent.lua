@@ -26,7 +26,6 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   local _pos      = vec2(0, 0)
-  local _target   = nil
 
   local _fatigue  = 0
 
@@ -87,21 +86,48 @@ function Agent:instance(_obj, _specname, _stage)
     _supply = false
   end
 
+  local _objective = nil
+  local _target = nil
+  local _status = nil
+
+  function done()
+    _status = 'done'
+  end
+
+  function fail()
+    _status = 'failed'
+    _fatigue = _fatigue + 10
+  end
+
+  function objective()
+    return _objective
+  end
+
+  function setObjective(objective)
+    _objective = objective
+  end
+
   function target()
     if _target then
       return unpack(_target)
     end
   end
 
+  function setTarget(i, j)
+    _target = {i,j}
+  end
+
   function getIntention()
     local map             = _stage.map()
     local pathfinder      = _stage.pathfinder()
-    local action, ti, tj  = _behavior.nextTarget()
-    if not ti or not tj then return 'nothing', vec2(0,0) end
+    _behavior.nextTarget(_status)
+    local action = _objective
+    local ti, tj = unpack(_target)
+    if not action or not ti or not tj then return 'nothing', vec2(0,0) end
+    _status = 'inprogress'
     local si, sj = map.point2pos(_pos)
     local pi, pj = pathfinder.findPath(si, sj, ti, tj)
     if pi and pj then
-      _target = {ti, tj}
       local target = map.pos2point(pi, pj)
       local dir = vec2(0, 0)
       local dist = target - _pos

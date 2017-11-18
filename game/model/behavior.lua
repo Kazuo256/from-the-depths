@@ -29,17 +29,17 @@ function Behavior:instance(_obj, _specname, _agent, _stage)
     _tasks[taskspec.id] = task
   end
 
-  local function _routine()
+  local function _routine(status)
     while true do
       local task = _tasks[_spec['root']]
-      task.run(_agent, _stage, task.children)
+      task.run(_agent, _stage, task.children, status)
     end
   end
 
   local _run = coroutine.wrap(_routine)
 
-  function nextTarget()
-    return _run()
+  function nextTarget(status)
+    return _run(status)
   end
 
 end

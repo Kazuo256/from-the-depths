@@ -26,14 +26,19 @@ function TASK.run(agent, stage, children)
   else
     action = 'something'
   end
+  agent.setObjective(action)
+  agent.setTarget(ti, tj)
   repeat
-    yield(action, ti, tj)
+    local status = yield()
+    if status == 'failed' then
+      return false
+    end
     pi, pj = stage.map().point2pos(agent.pos())
     local dist = stage.pathfinder().dist(pi, pj, ti, tj) or 999
     if dist > 20 then
       return false
     end
-  until pi == ti and pj == tj
+  until status == 'done'
   return true
 end
 

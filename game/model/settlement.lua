@@ -63,21 +63,34 @@ function Settlement:instance(_obj, _role)
   end
 
   function accept(agent, action, stage)
-    if _role == 'harvest' and action == 'collect' and _supplies > 0 then
-      agent.giveSupply()
-      _supplies = _supplies - 1
-    elseif _role == 'rest' and action == 'sell' and _demand > 0
-                           and agent.hasSupply()
-                           and stage.spend(_PRICE['supply']) then
-      agent.takeSupply()
-      agent.gain(_PRICE['supply'])
-      _supplies = _supplies + 1
-      _demand = _demand - 1
-    elseif _role == 'rest' and action == 'rest' and _supplies > 0
-                           and agent.spend(_PRICE['rest']) then
-      agent.restore()
-      _supplies = _supplies - 1
-      stage.gain(_PRICE['rest'])
+    if _role == 'harvest' and action == 'collect' then
+      if _supplies > 0 then
+        agent.giveSupply()
+        _supplies = _supplies - 1
+        agent.done()
+      else
+        agent.fail()
+      end
+    elseif _role == 'rest' and action == 'sell' then
+      if _demand > 0 and agent.hasSupply()
+                     and stage.spend(_PRICE['supply']) then
+        agent.takeSupply()
+        agent.gain(_PRICE['supply'])
+        _supplies = _supplies + 1
+        _demand = _demand - 1
+        agent.done()
+      else
+        agent.fail()
+      end
+    elseif _role == 'rest' and action == 'rest' then
+      if _supplies > 0 and agent.spend(_PRICE['rest']) then
+        agent.restore()
+        _supplies = _supplies - 1
+        stage.gain(_PRICE['rest'])
+        agent.done()
+      else
+        agent.fail()
+      end
     end
   end
 
