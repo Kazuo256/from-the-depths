@@ -22,6 +22,8 @@ function Agent:instance(_obj, _specname, _stage)
   local _pos      = vec2(0, 0)
   local _target   = nil
 
+  local _supply   = false
+
   function speed()
     return _spec['speed']
   end
@@ -32,6 +34,18 @@ function Agent:instance(_obj, _specname, _stage)
 
   function setPos(pos)
     _pos = pos
+  end
+
+  function hasSupply()
+    return _supply
+  end
+
+  function giveSupply()
+    _supply = true
+  end
+
+  function takeSupply()
+    _supply = false
   end
 
   function target()

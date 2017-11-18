@@ -76,7 +76,7 @@ local function _updateUI()
       _hud.space(2)
       if _hud.button(2, action) then
         if _selected.role() == 'training' and _stage.spend(200) then
-          _selected.requestSpawn(5)
+          _selected.requestSpawn(5, 'worker')
         end
       end
     end

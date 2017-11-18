@@ -27,6 +27,7 @@ function Settlement:instance(_obj, _role)
   local _next     = false
 
   local _supplies = 0
+  local _treasure = 0
 
   function role()
     return _role
@@ -34,6 +35,17 @@ function Settlement:instance(_obj, _role)
 
   function roleAction()
     return self.roles[_role].action
+  end
+
+  function addTreasure(amount)
+    _treasure = _treasure + amount
+  end
+
+  function spendTreasure(amount)
+    if amount <= _treasure then
+      _treasure = _treasure - amount
+      return true
+    end
   end
 
   function addSupply()
@@ -44,6 +56,17 @@ function Settlement:instance(_obj, _role)
     if n <= _supplies then
       _supplies = _supplies - n
       return true
+    end
+  end
+
+  function accept(agent, action)
+    if _role == 'harvest' and action == 'collect' then
+      print(agent, 'collected supply')
+      agent.giveSupply()
+    elseif _role == 'rest' and action == 'sell' and spendTreasure(10) then
+      print(agent, 'sold supply')
+      agent.takeSupply()
+      addSupply()
     end
   end
 
@@ -59,9 +82,9 @@ function Settlement:instance(_obj, _role)
     end
   end
 
-  function requestSpawn(n)
+  function requestSpawn(n, typename)
     for i=1,n do
-      _pending.push('test')
+      _pending.push(typename)
     end
   end
 

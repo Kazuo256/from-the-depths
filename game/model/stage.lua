@@ -190,7 +190,8 @@ function Stage:instance(_obj, _specname)
       local ti, tj = agent.target()
       table.insert(moved, {agent, {oi, oj}, {pi, pj}})
       if ti == pi and tj == pj and action ~= 'nothing' then
-        print('ahoy')
+        local settlement = _map.getTileData(ti, tj, 'settlement')
+        settlement.accept(agent, action)
       end
     end
     for _,move in ipairs(moved) do

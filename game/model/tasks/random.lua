@@ -17,9 +17,22 @@ function TASK.run(agent, stage, children)
   if dist > 20 then
     return false
   end
+  local role = chosen.role()
+  local action
+  if role == 'harvest' then
+    action = 'collect'
+  elseif role == 'rest' then
+    if agent.hasSupply() then
+      action = 'sell'
+    else
+      action = 'rest'
+    end
+  else
+    action = 'something'
+  end
   repeat
+    yield(action, ti, tj)
     pi, pj = stage.map().point2pos(agent.pos())
-    yield('something', ti, tj)
   until pi == ti and pj == tj
   return true
 end
