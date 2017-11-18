@@ -18,8 +18,8 @@ production-rate = 20
 [gameplay.price]
 
 training = 200
-supply = 10
-rest = 20
+supply = 5
+rest = 10
 
 [physics]
 

@@ -145,7 +145,7 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function tick(dt)
-    tire((_supply and 2 or 1)*dt)
+    tire((_supply and 2 or 1)*dt/2)
   end
 
 end
