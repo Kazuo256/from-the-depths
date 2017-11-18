@@ -12,9 +12,14 @@ neighbors = [
   [1, -1], [1, 0], [1, 1]
 ]
 
-training-price = 200
-supply-price = 10
-rest-price = 20
+# Supplies/min
+production-rate = 40
+
+[gameplay.price]
+
+training = 200
+supply = 10
+rest = 20
 
 [physics]
 

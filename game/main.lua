@@ -38,9 +38,11 @@ local _selected
 local _BGM
 
 local _DEFS
+local _PRICE
 
 function love.load()
   _DEFS = DB.load('defs')
+  _PRICE = _DEFS['gameplay']['price']
   _FRAME = 1 / _DEFS['fps']
   _BGM = love.audio.newSource('assets/bgm/Brain Damage.ogg')
   _BGM:setLooping(true)
@@ -85,7 +87,7 @@ local function _updateUI()
       _hud.space(2)
       if _hud.button(2, action) then
         if _selected.role() == 'training' and
-           _stage.spend(_DEFS['gameplay']['training-price']) then
+           _stage.spend(_PRICE['training']) then
           _selected.requestSpawn(5, 'worker')
         end
         if _selected.role() == 'rest' then

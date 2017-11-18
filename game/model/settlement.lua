@@ -22,12 +22,18 @@ function Settlement:instance(_obj, _role)
   setfenv(1, _obj)
 
   local _DELAY    = DB.load('defs')['gameplay']['spawn-delay']
+  local _RATE     = DB.load('defs')['gameplay']['production-rate']
+  local _PRICE    = DB.load('defs')['gameplay']['price']
+
+  -- Agent spawning
   local _pending  = Queue(128)
   local _count    = 0
   local _next     = false
 
+  -- Economy
   local _supplies = 0
   local _demand = 0
+  local _production_count = 0
 
   function role()
     return _role
@@ -56,16 +62,15 @@ function Settlement:instance(_obj, _role)
     end
   end
 
-  local _SUPPLY_PRICE = DB.load('defs')['gameplay']['supply-price']
-
   function accept(agent, action, stage)
-    if _role == 'harvest' and action == 'collect' then
+    if _role == 'harvest' and action == 'collect' and _supplies > 0 then
       agent.giveSupply()
+      _supplies = _supplies - 1
     elseif _role == 'rest' and action == 'sell' and _demand > 0
                            and agent.hasSupply()
-                           and stage.spend(_SUPPLY_PRICE) then
+                           and stage.spend(_PRICE['supply']) then
       agent.takeSupply()
-      agent.addTreasure(_SUPPLY_PRICE)
+      agent.addTreasure(_PRICE['supply'])
       _supplies = _supplies + 1
       _demand = _demand - 1
     end
@@ -80,6 +85,14 @@ function Settlement:instance(_obj, _role)
       end
     else
       _count = _DELAY
+    end
+    if _role == 'harvest' then
+      local inv_rate = 60 * 1/_RATE
+      _production_count = _production_count + dt
+      if _production_count > inv_rate then
+        _supplies = _supplies + 1
+        _production_count = _production_count - inv_rate
+      end
     end
   end
 

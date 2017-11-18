@@ -23,7 +23,7 @@ function Agent:instance(_obj, _specname, _stage)
   local _target   = nil
 
   local _supply   = false
-  local _treasure = DB.load('defs')['gameplay']['training-price']/2
+  local _treasure = DB.load('defs')['gameplay']['price']['training']/2
 
   function addTreasure(amount)
     _treasure = _treasure + amount
