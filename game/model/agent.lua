@@ -16,14 +16,27 @@ function Agent:instance(_obj, _specname, _stage)
   setfenv(1, _obj)
 
   local _NEIGHBORS = DB.load('defs')['gameplay']['neighbors']
+  local _MAX_FATIGUE = 100
 
-  _specname       = 'agents/' .. _specname
-  local _spec     = DB.load(_specname)
+  local _spec     = DB.load('agents/' .. _specname)
   local _behavior = Behavior(_spec['behavior'], _obj, _stage)
+
+  function specname()
+    return _specname
+  end
+
   local _pos      = vec2(0, 0)
   local _target   = nil
 
   local _fatigue  = 0
+
+  function fatigue()
+    return _fatigue
+  end
+
+  function tire(amount)
+    _fatigue = math.min(_MAX_FATIGUE, _fatigue + amount)
+  end
 
   function restore()
     _fatigue = 0
@@ -31,6 +44,10 @@ function Agent:instance(_obj, _specname, _stage)
 
   local _supply   = false
   local _treasure = DB.load('defs')['gameplay']['price']['training']/2
+
+  function treasure()
+    return _treasure
+  end
 
   function gain(amount)
     _treasure = _treasure + amount
@@ -44,8 +61,10 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function speed()
-    local effective_fatigue = math.max(_fatigue, 40) - 40
-    return math.max(0.1, _spec['speed'] * (1 - effective_fatigue/60))
+    local thresh = 0.4 * _MAX_FATIGUE
+    local effective_fatigue = math.max(_fatigue, thresh) - thresh
+    return math.max(0.1, _spec['speed']
+                       * (1 - effective_fatigue/(_MAX_FATIGUE - thresh)))
   end
 
   function pos()
@@ -100,7 +119,7 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function tick(dt)
-    _fatigue = _fatigue + (_supply and 2 or 1)*dt
+    tire((_supply and 2 or 1)*dt)
   end
 
 end

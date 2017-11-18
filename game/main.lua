@@ -19,13 +19,15 @@
 
 require 'lib'
 
-local DB        = require 'db'
-local MOUSE     = require 'ui.mouse'
-local Stage     = require 'model.stage'
-local StageView = require 'ui.stageview'
-local HUD       = require 'ui.hud'
+local DB          = require 'db'
+local Stage       = require 'model.stage'
+local Settlement  = require 'model.settlement'
+local Agent       = require 'model.agent'
+local MOUSE       = require 'ui.mouse'
+local StageView   = require 'ui.stageview'
+local HUD         = require 'ui.hud'
 
-local vec2      = require 'cpml' .vec2
+local vec2        = require 'cpml' .vec2
 
 local _FRAME
 local _lag
@@ -65,6 +67,11 @@ local function _updateUI()
       _selected = settlement
     end
   end
+  for _,agent in _stage.eachAgent() do
+    if _view.agentSelected(agent) then
+      _selected = agent
+    end
+  end
   _hud.flush()
   _hud.text(1, "Resources", 'HEAD')
   _hud.text(1, "Treasure", 'TITLE')
@@ -72,27 +79,39 @@ local function _updateUI()
   _hud.text(1, "Workers", 'TITLE')
   _hud.text(1, _stage.agentCount(), 'TEXT')
   if _selected then
-    _hud.text(2, "Settlement", 'HEAD')
-    _hud.text(2, _selected.role(), 'TEXT')
-    if _selected.role() ~= 'training' then
-      _hud.text(2, "Supplies", 'TITLE')
-      _hud.text(2, _selected.supplies(), 'TEXT')
-      if _selected.role() == 'rest' then
-        _hud.text(2, "Demand", 'TITLE')
-        _hud.text(2, _selected.demand(), 'TEXT')
-      end
-    end
-    local action = _selected.roleAction()
-    if action then
-      _hud.space(2)
-      if _hud.button(2, action) then
-        if _selected.role() == 'training' and
-           _stage.spend(_PRICE['training']) then
-          _selected.requestSpawn(5, 'worker')
-        end
+    if _selected.__class == Settlement then
+      _hud.text(2, "Settlement", 'HEAD')
+      _hud.text(2, _selected.role(), 'TEXT')
+      if _selected.role() ~= 'training' then
+        _hud.text(2, "Supplies", 'TITLE')
+        _hud.text(2, _selected.supplies(), 'TEXT')
         if _selected.role() == 'rest' then
-          _selected.increaseDemand(10)
+          _hud.text(2, "Demand", 'TITLE')
+          _hud.text(2, _selected.demand(), 'TEXT')
         end
+      end
+      local action = _selected.roleAction()
+      if action then
+        _hud.space(2)
+        if _hud.button(2, action) then
+          if _selected.role() == 'training' and
+             _stage.spend(_PRICE['training']) then
+            _selected.requestSpawn(5, 'worker')
+          end
+          if _selected.role() == 'rest' then
+            _selected.increaseDemand(10)
+          end
+        end
+      end
+    elseif _selected.__class == Agent then
+      _hud.text(2, "Agent", 'HEAD')
+      _hud.text(2, _selected.specname(), 'TEXT')
+      _hud.text(2, "Treasure", 'TITLE')
+      _hud.text(2, _selected.treasure(), 'TEXT')
+      _hud.text(2, "Fatigue", 'TITLE')
+      _hud.text(2, string.format("%1d/100", _selected.fatigue()), 'TEXT')
+      if _selected.hasSupply() then
+        _hud.text(2, "Carrying supply", 'TEXT')
       end
     end
   end

@@ -24,6 +24,7 @@ function StageView:instance(_obj, _stage)
 
   local _clicked = {}
   local _current_settlement = nil
+  local _current_agent = nil
 
   --[[ Camera ]]--
 
@@ -53,6 +54,7 @@ function StageView:instance(_obj, _stage)
     if _tileClicked(i, j, 1) then
       _clicked[settlement] = 0.2
       _current_settlement = settlement
+      _current_agent = nil
       return true
     end
   end
@@ -62,6 +64,16 @@ function StageView:instance(_obj, _stage)
       _clicked[settlement] = 0.2
       return true
     end
+  end
+
+  function agentSelected(agent)
+    local mpos = (MOUSE.pos() - _campos) * (1/_TILESIZE)
+    local selected = MOUSE.clicked(1) and (mpos - agent.pos()):len2() < 0.2*0.2
+    if selected then
+      _current_agent = agent
+      _current_settlement = nil
+    end
+    return selected
   end
 
   function update(dt)
@@ -141,6 +153,10 @@ function StageView:instance(_obj, _stage)
     for _,agent in _stage.eachAgent() do
       g.push()
       g.translate((agent.pos() * _TILESIZE):unpack())
+      if agent == _current_agent then
+        g.setColor(colors['pale-pink'])
+        g.circle('line', 0, 2, 16)
+      end
       g.setColor(colors['tiffany-blue'])
       g.polygon('fill', 0, -8, 8, 8, -8, 8)
       if agent.hasSupply() then
