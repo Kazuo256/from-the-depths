@@ -13,7 +13,7 @@ neighbors = [
 ]
 
 # Supplies/min
-production-rate = 40
+production-rate = 20
 
 [gameplay.price]
 

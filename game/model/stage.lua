@@ -150,6 +150,10 @@ function Stage:instance(_obj, _specname)
       end
     end
 
+    for _,agent in ipairs(_agents) do
+      agent.tick(dt)
+    end
+
     -- Trace tactical paths
     _pathfinder.updatePaths(dt)
 

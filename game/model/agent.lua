@@ -9,6 +9,7 @@ local unpack  = unpack
 local ipairs  = ipairs
 local pairs   = pairs
 local print   = print
+local math    = math
 
 function Agent:instance(_obj, _specname, _stage)
 
@@ -21,6 +22,8 @@ function Agent:instance(_obj, _specname, _stage)
   local _behavior = Behavior(_spec['behavior'], _obj, _stage)
   local _pos      = vec2(0, 0)
   local _target   = nil
+
+  local _fatigue  = 0
 
   local _supply   = false
   local _treasure = DB.load('defs')['gameplay']['price']['training']/2
@@ -37,7 +40,8 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function speed()
-    return _spec['speed']
+    local effective_fatigue = math.max(_fatigue, 40) - 40
+    return math.max(0.1, _spec['speed'] * (1 - effective_fatigue/60))
   end
 
   function pos()
@@ -89,6 +93,10 @@ function Agent:instance(_obj, _specname, _stage)
 
   function move(dir, dt)
     return _pos + dir * speed() * dt
+  end
+
+  function tick(dt)
+    _fatigue = _fatigue + (_supply and 2 or 1)*dt
   end
 
 end
