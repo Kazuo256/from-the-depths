@@ -25,10 +25,14 @@ function Agent:instance(_obj, _specname, _stage)
 
   local _fatigue  = 0
 
+  function restore()
+    _fatigue = 0
+  end
+
   local _supply   = false
   local _treasure = DB.load('defs')['gameplay']['price']['training']/2
 
-  function addTreasure(amount)
+  function gain(amount)
     _treasure = _treasure + amount
   end
 

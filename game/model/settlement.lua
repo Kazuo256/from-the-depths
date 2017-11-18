@@ -70,9 +70,14 @@ function Settlement:instance(_obj, _role)
                            and agent.hasSupply()
                            and stage.spend(_PRICE['supply']) then
       agent.takeSupply()
-      agent.addTreasure(_PRICE['supply'])
+      agent.gain(_PRICE['supply'])
       _supplies = _supplies + 1
       _demand = _demand - 1
+    elseif _role == 'rest' and action == 'rest' and _supplies > 0
+                           and agent.spend(_PRICE['rest']) then
+      agent.restore()
+      _supplies = _supplies - 1
+      stage.gain(_PRICE['rest'])
     end
   end
 

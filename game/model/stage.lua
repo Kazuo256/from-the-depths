@@ -31,6 +31,10 @@ function Stage:instance(_obj, _specname)
     return _treasure
   end
 
+  function gain(amount)
+    _treasure = _treasure + amount
+  end
+
   function spend(amount)
     if amount <= _treasure then
       _treasure = _treasure - amount
