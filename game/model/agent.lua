@@ -61,10 +61,10 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function speed()
-    local thresh = 0.4 * _MAX_FATIGUE
+    local thresh = 0.75 * _MAX_FATIGUE
     local effective_fatigue = math.max(_fatigue, thresh) - thresh
-    return math.max(0.1, _spec['speed']
-                       * (1 - effective_fatigue/(_MAX_FATIGUE - thresh)))
+    return (1 - 0.9*effective_fatigue/(_MAX_FATIGUE - thresh))
+         * _spec['speed']
   end
 
   function pos()
