@@ -37,8 +37,11 @@ local _hud
 local _selected
 local _BGM
 
+local _DEFS
+
 function love.load()
-  _FRAME = 1 / DB.load('defs')['fps']
+  _DEFS = DB.load('defs')
+  _FRAME = 1 / _DEFS['fps']
   _BGM = love.audio.newSource('assets/bgm/Brain Damage.ogg')
   _BGM:setLooping(true)
   _BGM:play()
@@ -47,9 +50,7 @@ function love.load()
   _view = StageView(_stage)
   _hud = HUD(_stage)
   _selected = nil
-  love.graphics.setBackgroundColor(
-    DB.load('defs')['colors']['dark-coral']
-  )
+  love.graphics.setBackgroundColor(_DEFS['colors']['dark-coral'])
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
@@ -71,12 +72,24 @@ local function _updateUI()
   if _selected then
     _hud.text(2, "Settlement", 'HEAD')
     _hud.text(2, _selected.role(), 'TEXT')
+    if _selected.role() ~= 'training' then
+      _hud.text(2, "Supplies", 'TITLE')
+      _hud.text(2, _selected.supplies(), 'TEXT')
+      if _selected.role() == 'rest' then
+        _hud.text(2, "Demand", 'TITLE')
+        _hud.text(2, _selected.demand(), 'TEXT')
+      end
+    end
     local action = _selected.roleAction()
     if action then
       _hud.space(2)
       if _hud.button(2, action) then
-        if _selected.role() == 'training' and _stage.spend(200) then
+        if _selected.role() == 'training' and
+           _stage.spend(_DEFS['gameplay']['training-price']) then
           _selected.requestSpawn(5, 'worker')
+        end
+        if _selected.role() == 'rest' then
+          _selected.increaseDemand(10)
         end
       end
     end

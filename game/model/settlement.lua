@@ -27,7 +27,7 @@ function Settlement:instance(_obj, _role)
   local _next     = false
 
   local _supplies = 0
-  local _treasure = 0
+  local _demand = 0
 
   function role()
     return _role
@@ -37,19 +37,16 @@ function Settlement:instance(_obj, _role)
     return self.roles[_role].action
   end
 
-  function addTreasure(amount)
-    _treasure = _treasure + amount
+  function increaseDemand(amount)
+    _demand = _demand + amount
   end
 
-  function spendTreasure(amount)
-    if amount <= _treasure then
-      _treasure = _treasure - amount
-      return true
-    end
+  function demand()
+    return _demand
   end
 
-  function addSupply()
-    _supplies = _supples + 1
+  function supplies()
+    return _supplies
   end
 
   function spendSupplies(n)
@@ -59,14 +56,18 @@ function Settlement:instance(_obj, _role)
     end
   end
 
-  function accept(agent, action)
+  local _SUPPLY_PRICE = DB.load('defs')['gameplay']['supply-price']
+
+  function accept(agent, action, stage)
     if _role == 'harvest' and action == 'collect' then
-      print(agent, 'collected supply')
       agent.giveSupply()
-    elseif _role == 'rest' and action == 'sell' and spendTreasure(10) then
-      print(agent, 'sold supply')
+    elseif _role == 'rest' and action == 'sell' and _demand > 0
+                           and agent.hasSupply()
+                           and stage.spend(_SUPPLY_PRICE) then
       agent.takeSupply()
-      addSupply()
+      agent.addTreasure(_SUPPLY_PRICE)
+      _supplies = _supplies + 1
+      _demand = _demand - 1
     end
   end
 

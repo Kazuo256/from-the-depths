@@ -23,6 +23,18 @@ function Agent:instance(_obj, _specname, _stage)
   local _target   = nil
 
   local _supply   = false
+  local _treasure = DB.load('defs')['gameplay']['training-price']/2
+
+  function addTreasure(amount)
+    _treasure = _treasure + amount
+  end
+
+  function spend(amount)
+    if amount <= _treasure then
+      _treasure = _treasure - amount
+      return true
+    end
+  end
 
   function speed()
     return _spec['speed']

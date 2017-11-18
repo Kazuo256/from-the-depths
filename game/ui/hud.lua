@@ -63,7 +63,7 @@ function HUD:instance(_obj, _stage)
   end
 
   function space(panel)
-    _contents[panel].off = _contents[panel].off + 64
+    _contents[panel].off = _contents[panel].off + 48
   end
 
   function flush()

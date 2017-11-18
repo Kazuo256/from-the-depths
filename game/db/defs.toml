@@ -12,6 +12,10 @@ neighbors = [
   [1, -1], [1, 0], [1, 1]
 ]
 
+training-price = 200
+supply-price = 10
+rest-price = 20
+
 [physics]
 
 collision-radius = 0.5

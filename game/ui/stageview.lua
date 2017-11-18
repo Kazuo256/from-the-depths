@@ -143,6 +143,9 @@ function StageView:instance(_obj, _stage)
       g.translate((agent.pos() * _TILESIZE):unpack())
       g.setColor(colors['tiffany-blue'])
       g.polygon('fill', 0, -8, 8, 8, -8, 8)
+      if agent.hasSupply() then
+        g.rectangle('fill', 12, -16, 6, 6)
+      end
       g.pop()
     end
     g.setStencilTest()
