@@ -187,7 +187,11 @@ function Stage:instance(_obj, _specname)
         end
       end
       local pi, pj = _map.point2pos(agent.pos())
+      local ti, tj = agent.target()
       table.insert(moved, {agent, {oi, oj}, {pi, pj}})
+      if ti == pi and tj == pj and action ~= 'nothing' then
+        print('ahoy')
+      end
     end
     for _,move in ipairs(moved) do
       local agent, from, to = unpack(move)

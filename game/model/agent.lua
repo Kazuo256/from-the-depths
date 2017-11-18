@@ -35,7 +35,9 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function target()
-    return _target and unpack(_target)
+    if _target then
+      return unpack(_target)
+    end
   end
 
   function getIntention()
