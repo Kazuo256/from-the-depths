@@ -12,7 +12,7 @@ return function(agent, stage, settlement, action)
     end
     local pi, pj = stage.map().point2pos(agent.pos())
     local dist = stage.pathfinder().dist(pi, pj, ti, tj) or 999
-    if dist > 20 then
+    if dist > 12 then
       return false
     end
   until status == 'done'

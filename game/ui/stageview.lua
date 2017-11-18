@@ -138,13 +138,20 @@ function StageView:instance(_obj, _stage)
             g.print(string.format("%d", bucket.n), 0, 0)
           end
         end
-        if _current_settlement and _debug.f2 then
+        if _current_settlement then
           local si, sj = _stage.settlementPos(_current_settlement)
-          local pi, pj = _stage.pathfinder().findPath(i, j, si, sj)
-          if pi and pj then
-            local di, dj = pi-i, pj-j
-            g.setColor(colors['pale-pink'])
-            g.print(string.format("%2d %2d", di, dj), 0, 0)
+          g.setColor(colors['pale-pink'])
+          if _debug.f2 then
+            local pi, pj = _stage.pathfinder().findPath(i, j, si, sj)
+            if pi and pj then
+              local di, dj = pi-i, pj-j
+              g.print(string.format("%2d %2d", di, dj), 0, 0)
+            end
+          elseif _debug.f3 then
+            local dist = _stage.pathfinder().dist(i, j, si, sj)
+            if dist then
+              g.print(string.format("%2d", dist), 0, 0)
+            end
           end
         end
         g.pop()
