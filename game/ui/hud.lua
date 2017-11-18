@@ -8,8 +8,10 @@ local setfenv = setfenv
 local love    = love
 local print   = print
 local pairs   = pairs
+local ipairs  = ipairs
 local unpack  = unpack
 local string  = string
+local table   = table
 local select  = select
 
 
@@ -34,18 +36,41 @@ function HUD:instance(_obj, _stage)
     TEXT = 'right'
   }
 
-  local _selected
-  local _activated
+  local _contents = {{ n = 0, off = 0 }, { n = 0, off = 0 }}
 
   local function _buttonBounds()
     return _MARGIN*2, 0, _WIDTH - 6*_MARGIN, 60
   end
 
-  function activateSelected(selected)
-    _selected = selected
-    local mpos = MOUSE.pos()
-    return MOUSE.clicked(1)
-       and MOUSE.within(_buttonBounds())
+  function text(panel, str, weight)
+    local font = _FONTS[weight]
+    local off = _contents[panel].off
+    local n = _contents[panel].n+1
+    _contents[panel][n] = {type='text', off, str, weight}
+    _contents[panel].n = n
+    _contents[panel].off =  off + 8 + font:getHeight()
+  end
+
+  function button(panel, str)
+    local off = _contents[panel].off
+    local n = _contents[panel].n+1
+    _contents[panel][n] = {type='button', off}
+    _contents[panel].n = n
+    text(panel, str, 'HEAD')
+    local x, y, w, h = _buttonBounds()
+    y = y + off + (panel-1) * 720/2
+    return MOUSE.clicked(1) and MOUSE.within(x, y, w, h)
+  end
+
+  function space(panel)
+    _contents[panel].off = _contents[panel].off + 64
+  end
+
+  function flush()
+    for i=1,2 do
+      _contents[i].n = 0
+      _contents[i].off = 0
+    end
   end
 
   local function _text(g, str, weight, off)
@@ -57,46 +82,36 @@ function HUD:instance(_obj, _stage)
     g.setFont(font)
     g.printf(str, 16, 8, _WIDTH - 2*_MARGIN - 32, align)
     g.pop()
-    return off + 8 + font:getHeight()
   end
 
-  function flush()
-    _activated = false
+  local function _button(g, off)
+    local x, y, w, h = _buttonBounds()
+    g.setColor(_COLORS['charleston-green'])
+    g.rectangle('fill', x, off + y, w, h, 10, 10)
   end
     
   function draw()
     local g = love.graphics
     local m = _DEFS['margin']
     local w = _DEFS['width']
-    g.push()
-    g.translate(m, m)
-    g.setColor(_COLORS['smoky-black'])
-    g.rectangle('fill', 0, 0, w - 2*m, 720/2 - 2*m, 20, 20)
-    local off = 0
-    off = _text(g, "Resources", 'HEAD', off)
-    off = _text(g, "Treasure", 'TITLE', off)
-    off = _text(g, _stage.treasure(), 'TEXT', off)
-    off = _text(g, "Workers", 'TITLE', off)
-    off = _text(g, _stage.agentCount(), 'TEXT', off)
-    g.pop()
-    g.push()
-    g.translate(m, 720/2 + m)
-    g.setColor(_COLORS['smoky-black'])
-    g.rectangle('fill', 0, 0, w - 2*m, 720/2 - 2*m, 20, 20)
-    local off = 0
-    if _selected then
-      off = _text(g, "Settlement", 'HEAD', off)
-      off = _text(g, _selected.role() .. " camp", 'TEXT', off)
-      local action = _selected.roleAction()
-      if action then
-        off = off + 64
-        local x, y, w, h = _buttonBounds()
-        g.setColor(_COLORS['charleston-green'])
-        g.rectangle('fill', x, off + y, w, h, 10, 10)
-        off = _text(g, action, 'HEAD', off)
+    for i=1,2 do
+      g.push()
+      g.translate(m, m + (i-1) * 720/2)
+      g.setColor(_COLORS['smoky-black'])
+      g.rectangle('fill', 0, 0, w - 2*m, 720/2 - 2*m, 20, 20)
+      _off = 0
+      for j=1,_contents[i].n do
+        local item = _contents[i][j]
+        if item.type == 'text' then
+          local off, str, weight = unpack(item)
+          _text(g, str, weight, off)
+        elseif item.type == 'button' then
+          local off = unpack(item)
+          _button(g, off)
+        end
       end
+      g.pop()
     end
-    g.pop()
   end
  
 end

@@ -56,6 +56,34 @@ function love.mousemoved(x, y, dx, dy, istouch)
   MOUSE.move(vec2(dx, dy))
 end
 
+local function _updateUI()
+  for settlement, pos in _stage.eachSettlement() do
+    if _view.settlementSelected(settlement, unpack(pos)) then
+      _selected = settlement
+    end
+  end
+  _hud.flush()
+  _hud.text(1, "Resources", 'HEAD')
+  _hud.text(1, "Treasure", 'TITLE')
+  _hud.text(1, _stage.treasure(), 'TEXT')
+  _hud.text(1, "Workers", 'TITLE')
+  _hud.text(1, _stage.agentCount(), 'TEXT')
+  if _selected then
+    _hud.text(2, "Settlement", 'HEAD')
+    _hud.text(2, _selected.role(), 'TEXT')
+    local action = _selected.roleAction()
+    if action then
+      _hud.space(2)
+      if _hud.button(2, action) then
+        if _selected.role() == 'training' and _stage.spend(200) then
+          _selected.requestSpawn(5)
+        end
+      end
+    end
+  end
+  MOUSE.clear()
+end
+
 function love.update(dt)
   _view.update(dt)
   _lag = _lag + dt
@@ -63,17 +91,7 @@ function love.update(dt)
     _lag = _lag - _FRAME
     MOUSE.update(_FRAME)
     _stage.tick(_FRAME)
-    for settlement, pos in _stage.eachSettlement() do
-      if _view.settlementSelected(settlement, unpack(pos)) then
-        _selected = settlement
-      end
-    end
-    if _hud.activateSelected(_selected) then
-      if _selected.role() == 'training' and _stage.spend(200) then
-        _selected.requestSpawn(5)
-      end
-    end
-    MOUSE.clear()
+    _updateUI()
   end
 end
 

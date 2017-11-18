@@ -32,7 +32,7 @@ function Stage:instance(_obj, _specname)
   end
 
   function spend(amount)
-    if amount < _treasure then
+    if amount <= _treasure then
       _treasure = _treasure - amount
       return true
     end
