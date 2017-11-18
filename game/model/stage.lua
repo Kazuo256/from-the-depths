@@ -172,8 +172,9 @@ function Stage:instance(_obj, _specname)
     -- Move and remove agents
     local moved = {}
     for k,agent in ipairs(_agents) do
+      local action, target = agent.getIntention(_map, _pathfinder)
       local oi, oj = _map.point2pos(agent.pos())
-      local dir = (agent.getIntention(_map, _pathfinder) + repulsion[agent])
+      local dir = (target + repulsion[agent])
                   :normalize()
       local dir_h = vec2(dir.x,0)
       local dir_v = vec2(0,dir.y)

@@ -39,12 +39,12 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function getIntention()
-    local map         = _stage.map()
-    local pathfinder  = _stage.pathfinder()
-    local ti, tj      = _behavior.nextTarget()
-    if not ti or not tj then return vec2(0,0) end
-    local si, sj      = map.point2pos(_pos)
-    local pi, pj      = pathfinder.findPath(si, sj, ti, tj)
+    local map             = _stage.map()
+    local pathfinder      = _stage.pathfinder()
+    local action, ti, tj  = _behavior.nextTarget()
+    if not ti or not tj then return 'nothing', vec2(0,0) end
+    local si, sj = map.point2pos(_pos)
+    local pi, pj = pathfinder.findPath(si, sj, ti, tj)
     if pi and pj then
       _target = {ti, tj}
       local target = map.pos2point(pi, pj)
@@ -53,9 +53,9 @@ function Agent:instance(_obj, _specname, _stage)
       if dist:len2() > 0.001 then
         dir = dist:normalize()
       end
-      return dir
+      return action, dir
     else
-      return vec2(0, 0)
+      return action, vec2(0, 0)
     end
   end
 

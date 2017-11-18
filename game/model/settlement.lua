@@ -26,12 +26,25 @@ function Settlement:instance(_obj, _role)
   local _count    = 0
   local _next     = false
 
+  local _supplies = 0
+
   function role()
     return _role
   end
 
   function roleAction()
     return self.roles[_role].action
+  end
+
+  function addSupply()
+    _supplies = _supples + 1
+  end
+
+  function spendSupplies(n)
+    if n <= _supplies then
+      _supplies = _supplies - n
+      return true
+    end
   end
 
   function tick(dt)

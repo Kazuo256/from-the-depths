@@ -19,7 +19,7 @@ function TASK.run(agent, stage, children)
   end
   repeat
     pi, pj = stage.map().point2pos(agent.pos())
-    yield(ti, tj)
+    yield('nothing', ti, tj)
   until pi == ti and pj == tj
   return true
 end
