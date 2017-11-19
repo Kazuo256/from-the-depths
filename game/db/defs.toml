@@ -15,6 +15,12 @@ neighbors = [
 # Supplies/min
 production-rate = 20
 
+[gameplay.monster]
+
+# Seconds
+delay-base = 10
+delay-range = 20
+
 [gameplay.price]
 
 training = 200

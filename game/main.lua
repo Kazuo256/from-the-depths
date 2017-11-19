@@ -37,14 +37,23 @@ local _view
 local _hud
 
 local _selected
+local _next_monster
+
 local _BGM
 
 local _DEFS
+local _MONSTER
 local _PRICE
+
+local function _resetMonster()
+  _next_monster = _MONSTER['delay-base']
+                + love.math.random() * _MONSTER['delay-range']
+end
 
 function love.load()
   _DEFS = DB.load('defs')
   _PRICE = _DEFS['gameplay']['price']
+  _MONSTER = _DEFS['gameplay']['monster']
   _FRAME = 1 / _DEFS['fps']
   _BGM = love.audio.newSource('assets/bgm/Brain Damage.ogg')
   _BGM:setLooping(true)
@@ -54,6 +63,7 @@ function love.load()
   _view = StageView(_stage)
   _hud = HUD(_stage)
   _selected = nil
+  _resetMonster()
   love.graphics.setBackgroundColor(_DEFS['colors']['dark-coral'])
 end
 
@@ -119,12 +129,30 @@ local function _updateUI()
   MOUSE.clear()
 end
 
+local function _checkMonster(dt)
+  _next_monster = _next_monster - dt
+  if _next_monster <= 0 then
+    local dens = {}
+    local n = 0
+    for settlement in _stage.eachSettlement() do
+      if settlement.role() == 'den' then
+        n = n + 1
+        dens[n] = settlement
+      end
+    end
+    local chosen = dens[love.math.random(n)]
+    chosen.requestSpawn(1, 'monster')
+    _resetMonster()
+  end
+end
+
 function love.update(dt)
   _view.update(dt)
   _lag = _lag + dt
   while _lag >= _FRAME do
     _lag = _lag - _FRAME
     MOUSE.update(_FRAME)
+    _checkMonster(_FRAME)
     _stage.tick(_FRAME)
     _updateUI()
   end

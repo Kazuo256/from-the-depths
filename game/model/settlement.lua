@@ -14,7 +14,8 @@ Settlement.roles = {
   },
   rest = {
     action = "Buy +10"
-  }
+  },
+  den = {}
 }
 
 function Settlement:instance(_obj, _role)
