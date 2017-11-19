@@ -180,6 +180,25 @@ function Stage:instance(_obj, _specname)
     -- Trace tactical paths
     _pathfinder.updatePaths(dt)
 
+    -- Add surrounding fatigue to agents
+    for _,agent in ipairs(_agents) do
+      local oi, oj = _map.point2pos(agent.pos())
+      local n = 0
+      for i=-1,1 do
+        for j=-1,1 do
+          for other in pairs(_map.getTileData(oi+i, oj+j, 'agents') or {}) do
+            if other ~= 'n' and other.specname() ~= agent.specname() then
+              n = n + 1
+            end
+          end
+        end
+      end
+      if n > 0 then
+        local factor = (agent.specname() == 'worker') and 1 or 5
+        agent.tire(x * factor * dt)
+      end
+    end
+
     -- Repel packed agents
     local repulsion = {}
     local colradius = _PHYSDEFS['collision-radius']
