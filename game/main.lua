@@ -92,13 +92,16 @@ local function _updateUI()
     if _selected.__class == Settlement then
       _hud.text(2, "Settlement", 'HEAD')
       _hud.text(2, _selected.role(), 'TEXT')
-      if _selected.role() ~= 'training' then
+      if _selected.role() == 'rest' or _selected.role() == 'harvest' then
         _hud.text(2, "Supplies", 'TITLE')
         _hud.text(2, _selected.supplies(), 'TEXT')
         if _selected.role() == 'rest' then
           _hud.text(2, "Demand", 'TITLE')
           _hud.text(2, _selected.demand(), 'TEXT')
         end
+      elseif _selected.role() == 'den' then
+        _hud.text(2, "Next assault", 'TITLE')
+        _hud.text(2, string.format("%.1f secs", _next_monster), 'TEXT')
       end
       local action = _selected.roleAction()
       if action then
@@ -132,16 +135,8 @@ end
 local function _checkMonster(dt)
   _next_monster = _next_monster - dt
   if _next_monster <= 0 then
-    local dens = {}
-    local n = 0
-    for settlement in _stage.eachSettlement() do
-      if settlement.role() == 'den' then
-        n = n + 1
-        dens[n] = settlement
-      end
-    end
-    local chosen = dens[love.math.random(n)]
-    --chosen.requestSpawn(1, 'monster')
+    local monster = _stage.pickAgent('monster')
+    monster.rampage()
     _resetMonster()
   end
 end

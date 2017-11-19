@@ -18,6 +18,7 @@ function Agent:instance(_obj, _specname, _stage)
   local _NEIGHBORS    = DB.load('defs')['gameplay']['neighbors']
   local _MAX_FATIGUE  = 100
   local _RETIRE       = Behavior('retire', _obj, _stage)
+  local _ASSAULT      = Behavior('assault', _obj, _stage)
 
   local _spec     = DB.load('agents/' .. _specname)
   local _behavior = Behavior(_spec['behavior'], _obj, _stage)
@@ -165,7 +166,19 @@ function Agent:instance(_obj, _specname, _stage)
     tire((_supply and 2 or 1)*dt/2)
     if _behavior ~= _RETIRE and _specname == 'worker' and _fatigue >= 150 then
       _behavior = _RETIRE
+    elseif _behavior == _ASSAULT and _fatigue >= 100 then
+      calmDown()
     end
+  end
+
+  function rampage()
+    if _specname == 'monster' then
+      _behavior = _ASSAULT
+    end
+  end
+
+  function calmDown()
+    _behavior = Behavior(_spec['behavior'], _obj, _stage)
   end
 
 end

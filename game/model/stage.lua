@@ -14,6 +14,7 @@ local pairs   = pairs
 local unpack  = unpack
 local table   = table
 local math    = math
+local love    = love
 
 function Stage:instance(_obj, _specname)
 
@@ -94,6 +95,18 @@ function Stage:instance(_obj, _specname)
 
   function eachAgent()
     return ipairs(_agents)
+  end
+
+  function pickAgent(specname)
+    local n = 0
+    local agents = {}
+    for _,agent in ipairs(_agents) do
+      if agent.specname() == specname then
+        n = n + 1
+        agents[n] = agent
+      end
+    end
+    return agents[love.math.random(n)]
   end
 
   function agentCount(specname)
