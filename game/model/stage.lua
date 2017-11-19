@@ -136,11 +136,16 @@ function Stage:instance(_obj, _specname)
         for agent in pairs(_map.getTileData(i, j, 'agents')) do
           if agent ~= 'n' then
             local oi, oj = agent.target()
+            local add
             if oi ~= pos[1] or oj ~= pos[2] then
-              n = n + 3
+              add = 3
             else
-              n = n + 0.1
+              add = 0.1
             end
+            if agent.specname() == 'monster' then
+              add = add * 2
+            end
+            n = n + add
           end
         end
         return n
@@ -195,7 +200,7 @@ function Stage:instance(_obj, _specname)
       end
       if n > 0 then
         local factor = (agent.specname() == 'worker') and 1 or 5
-        agent.tire(x * factor * dt)
+        agent.tire(n * factor * dt)
       end
     end
 
