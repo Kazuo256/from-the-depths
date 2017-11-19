@@ -28,6 +28,7 @@ function Agent:instance(_obj, _specname, _stage)
   local _pos      = vec2(0, 0)
 
   local _fatigue  = 0
+  local _last_failed = nil
 
   function fatigue()
     return _fatigue
@@ -95,9 +96,14 @@ function Agent:instance(_obj, _specname, _stage)
     _status = 'done'
   end
 
-  function fail(fatigue)
+  function fail(fatigue, settlement)
     _status = 'failed'
+    _last_failed = settlement
     tire(fatigue)
+  end
+
+  function lastFailed()
+    return _last_failed
   end
 
   function objective()
