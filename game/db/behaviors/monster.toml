@@ -1,0 +1,7 @@
+
+root = "default"
+
+[[tasks]]
+id = "default"
+typename = "migrate"
+

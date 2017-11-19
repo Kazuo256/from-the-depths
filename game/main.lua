@@ -141,7 +141,7 @@ local function _checkMonster(dt)
       end
     end
     local chosen = dens[love.math.random(n)]
-    chosen.requestSpawn(1, 'monster')
+    --chosen.requestSpawn(1, 'monster')
     _resetMonster()
   end
 end

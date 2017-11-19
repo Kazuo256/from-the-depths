@@ -31,6 +31,10 @@ function Settlement:instance(_obj, _role)
   local _count    = 0
   local _next     = false
 
+  if _role == 'den' then
+    _pending.push('monster', 'monster', 'monster')
+  end
+
   -- Economy
   local _supplies = 0
   local _demand = 0
@@ -92,6 +96,10 @@ function Settlement:instance(_obj, _role)
       else
         agent.fail(0, _obj)
       end
+    elseif _role == 'den' and action == 'migrate' then
+      agent.restore()
+      agent.fail(0, _obj)
+      agent.done()
     end
   end
 

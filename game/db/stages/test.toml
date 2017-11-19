@@ -58,6 +58,14 @@ pos = [19, 19]
 role = "den"
 
 [[settlements]]
+pos = [16, 19]
+role = "den"
+
+[[settlements]]
 pos = [7, 11]
+role = "den"
+
+[[settlements]]
+pos = [7, 14]
 role = "den"
 
