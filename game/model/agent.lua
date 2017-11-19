@@ -38,8 +38,8 @@ function Agent:instance(_obj, _specname, _stage)
     _fatigue = math.min(2*_MAX_FATIGUE, _fatigue + amount)
   end
 
-  function restore()
-    _fatigue = 0
+  function restore(amount)
+    _fatigue = math.max(0, _fatigue - amount)
   end
 
   local _supply   = false

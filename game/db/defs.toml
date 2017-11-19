@@ -21,6 +21,9 @@ production-rate = 20
 delay-base = 10
 delay-range = 20
 
+treasure-base = 10
+treasure-range = 20
+
 [gameplay.price]
 
 training = 200

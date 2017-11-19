@@ -5,6 +5,8 @@ local Settlement  = require 'lux.class' :new{}
 
 local setfenv = setfenv
 local print   = print
+local math    = math
+local love    = love
 
 Settlement.roles = {
   harvest = {
@@ -25,6 +27,7 @@ function Settlement:instance(_obj, _role)
   local _DELAY    = DB.load('defs')['gameplay']['spawn-delay']
   local _RATE     = DB.load('defs')['gameplay']['production-rate']
   local _PRICE    = DB.load('defs')['gameplay']['price']
+  local _MONSTER  = DB.load('defs')['gameplay']['monster']
 
   -- Agent spawning
   local _pending  = Queue(128)
@@ -88,16 +91,21 @@ function Settlement:instance(_obj, _role)
         agent.fail(10, _obj)
       end
     elseif _role == 'rest' and action == 'rest' then
-      if _supplies > 0 and agent.spend(_PRICE['rest']) then
-        agent.restore()
+      if _supplies >= 1 and agent.spend(_PRICE['rest']) then
+        agent.restore(40)
         _supplies = _supplies - 1
         stage.gain(_PRICE['rest'])
         agent.done()
       else
         agent.fail(0, _obj)
       end
+    elseif _role == 'den' and action == 'scavenge' then
+      agent.gain(_MONSTER['treasure-base'] +
+                 math.floor(_MONSTER['treasure-range'] * love.math.random()))
+      agent.fail(50, _obj)
+      agent.done()
     elseif _role == 'den' and action == 'migrate' then
-      agent.restore()
+      agent.restore(200)
       agent.fail(0, _obj)
       agent.done()
     end

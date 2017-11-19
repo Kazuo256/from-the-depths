@@ -49,6 +49,21 @@ typename = "selector"
     id = "sell"
     typename = "sell"
     parent = "work"
+
+  [[tasks]]
+  id = "adventure"
+  typename = "sequence"
+  parent = "default"
+
+    [[tasks]]
+    id = "genki ka na?"
+    typename = "rested"
+    parent = "adventure"
+
+    [[tasks]]
+    id = "scavenge"
+    typename = "scavenge"
+    parent = "adventure"
   
   [[tasks]]
   id = "rest"
@@ -56,9 +71,29 @@ typename = "selector"
   parent = "default"
 
     [[tasks]]
-    id = "has enough?"
-    typename = "hastreasure"
+    id = "solve issues"
+    typename = "selector"
     parent = "rest"
+
+      [[tasks]]
+      id = "get rid"
+      typename = "sequence"
+      parent = "solve issues"
+
+        [[tasks]]
+        id = "maybe"
+        typename = "supplied"
+        parent = "solve issues"
+
+        [[tasks]]
+        id = "finish"
+        typename = "sell"
+        parent = "solve issues"
+
+      [[tasks]]
+      id = "has enough?"
+      typename = "hastreasure"
+      parent = "solve issues"
 
     [[tasks]]
     id = "go for it"
