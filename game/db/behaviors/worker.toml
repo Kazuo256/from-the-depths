@@ -61,6 +61,16 @@ typename = "selector"
     parent = "adventure"
 
     [[tasks]]
+    id = "empty handed"
+    typename = "not"
+    parent = "adventure"
+    
+      [[tasks]]
+      id = "check hands"
+      typename = "supplied"
+      parent = "empty handed"
+
+    [[tasks]]
     id = "scavenge"
     typename = "scavenge"
     parent = "adventure"
