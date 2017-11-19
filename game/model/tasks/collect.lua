@@ -6,7 +6,9 @@ local seek            = require 'model.tasks.helpers.seek'
 local yield           = coroutine.yield
 
 function task.run(agent, stage, children)
-  local chosen = findsettlement(stage, 'harvest')
+  agent.setTarget()
+  agent.setObjective('nothing')
+  local chosen = findsettlement(agent, stage, 'harvest')
   return seek(agent, stage, chosen, 'collect')
 end
 

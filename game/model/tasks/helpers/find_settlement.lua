@@ -1,13 +1,18 @@
 
-return function (stage, role)
-  local settlements = {}
-  local n = 0
+return function (agent, stage, role)
+  local chosen
+  local min = 999
+  local pi, pj = stage.map().point2pos(agent.pos())
   for settlement in stage.eachSettlement() do
     if settlement.role() == role then
-      table.insert(settlements, settlement)
-      n = n + 1
+      local ti, tj = stage.settlementPos(settlement)
+      local dist   = stage.pathfinder().dist(pi, pj, ti, tj)
+      if dist < min then
+        min = dist
+        chosen = settlement
+      end
     end
   end
-  return settlements[love.math.random(n)]
+  return chosen
 end
 
