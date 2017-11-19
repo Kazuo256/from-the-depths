@@ -19,6 +19,10 @@ function StageView:instance(_obj, _stage)
   local _SIDEBAR = DB.load('defs')['interface']['sidebar']
   local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _SETTLEMENT = love.graphics.newImage("assets/textures/settlement.png")
+  local _AGENTS = {
+    worker = love.graphics.newImage("assets/textures/worker.png"),
+    monster = love.graphics.newImage("assets/textures/monster.png")
+  }
 
   local _debug = {}
 
@@ -164,9 +168,15 @@ function StageView:instance(_obj, _stage)
         g.setColor(colors['pale-pink'])
         g.circle('line', 0, 2, 16)
       end
-      g.setColor(colors['tiffany-blue'])
-      g.polygon('fill', 0, -8, 8, 8, -8, 8)
+      if agent.specname() == 'worker' then
+        g.setColor(colors['tiffany-blue'])
+        g.draw(_AGENTS.worker, 0, 0, 0, 1, 1, 8, 8)
+      elseif agent.specname() == 'monster' then
+        g.setColor(colors['dark-coral'])
+        g.draw(_AGENTS.monster, 0, 0, 0, 1, 1, 12, 12)
+      end
       if agent.hasSupply() then
+        g.setColor(colors['tiffany-blue'])
         g.rectangle('fill', 12, -16, 6, 6)
       end
       g.pop()
