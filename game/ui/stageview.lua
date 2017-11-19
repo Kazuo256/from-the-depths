@@ -68,7 +68,7 @@ function StageView:instance(_obj, _stage)
 
   function agentSelected(agent)
     local mpos = (MOUSE.pos() - _campos) * (1/_TILESIZE)
-    local selected = MOUSE.clicked(1) and (mpos - agent.pos()):len2() < 0.2*0.2
+    local selected = MOUSE.clicked(1) and (mpos - agent.pos()):len2() < 0.3*0.3
     if selected then
       _current_agent = agent
       _current_settlement = nil
