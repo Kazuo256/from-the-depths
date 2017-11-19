@@ -108,6 +108,8 @@ function Settlement:instance(_obj, _role)
       agent.restore(200)
       agent.fail(0, _obj)
       agent.done()
+    elseif _role == 'training' and action == 'retire' then
+      agent.retire()
     end
   end
 

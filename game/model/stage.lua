@@ -96,8 +96,14 @@ function Stage:instance(_obj, _specname)
     return ipairs(_agents)
   end
 
-  function agentCount()
-    return #_agents
+  function agentCount(specname)
+    local n = 0
+    for _,agent in ipairs(_agents) do
+      if agent.specname() == specname then
+        n = n + 1
+      end
+    end
+    return n
   end
 
   --[[ Settlements ]]--
@@ -210,6 +216,17 @@ function Stage:instance(_obj, _specname)
         _unbucketAgent(agent, fi, fj)
         _bucketAgent(agent, ti, tj)
       end
+    end
+
+    -- Check for retired agents
+    local removed = {}
+    for k,agent in ipairs(_agents) do
+      if agent.retired() then
+        table.insert(removed, k)
+      end
+    end
+    for i,k in ipairs(removed) do
+      table.remove(_agents, k - i + 1)
     end
   end
 

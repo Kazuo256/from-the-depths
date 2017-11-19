@@ -87,7 +87,7 @@ local function _updateUI()
   _hud.text(1, "Treasure", 'TITLE')
   _hud.text(1, _stage.treasure(), 'TEXT')
   _hud.text(1, "Workers", 'TITLE')
-  _hud.text(1, _stage.agentCount(), 'TEXT')
+  _hud.text(1, _stage.agentCount('worker'), 'TEXT')
   if _selected then
     if _selected.__class == Settlement then
       _hud.text(2, "Settlement", 'HEAD')

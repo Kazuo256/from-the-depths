@@ -15,8 +15,9 @@ function Agent:instance(_obj, _specname, _stage)
 
   setfenv(1, _obj)
 
-  local _NEIGHBORS = DB.load('defs')['gameplay']['neighbors']
-  local _MAX_FATIGUE = 100
+  local _NEIGHBORS    = DB.load('defs')['gameplay']['neighbors']
+  local _MAX_FATIGUE  = 100
+  local _RETIRE       = Behavior('retire', _obj, _stage)
 
   local _spec     = DB.load('agents/' .. _specname)
   local _behavior = Behavior(_spec['behavior'], _obj, _stage)
@@ -29,6 +30,7 @@ function Agent:instance(_obj, _specname, _stage)
 
   local _fatigue  = 0
   local _last_failed = nil
+  local _retired  = false
 
   function fatigue()
     return _fatigue
@@ -40,6 +42,14 @@ function Agent:instance(_obj, _specname, _stage)
 
   function restore(amount)
     _fatigue = math.max(0, _fatigue - amount)
+  end
+
+  function retire()
+    _retired = true
+  end
+
+  function retired()
+    return _retired
   end
 
   local _supply   = false
@@ -153,6 +163,9 @@ function Agent:instance(_obj, _specname, _stage)
 
   function tick(dt)
     tire((_supply and 2 or 1)*dt/2)
+    if _behavior ~= _RETIRE and _specname == 'worker' and _fatigue >= 150 then
+      _behavior = _RETIRE
+    end
   end
 
 end
