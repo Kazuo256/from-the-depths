@@ -69,7 +69,7 @@ function Settlement:instance(_obj, _role)
         _supplies = _supplies - 1
         agent.done()
       else
-        agent.fail(5)
+        agent.fail(5, _obj)
       end
     elseif _role == 'rest' and action == 'sell' then
       if _demand > 0 and agent.hasSupply()
@@ -80,7 +80,7 @@ function Settlement:instance(_obj, _role)
         _demand = _demand - 1
         agent.done()
       else
-        agent.fail(10)
+        agent.fail(10, _obj)
       end
     elseif _role == 'rest' and action == 'rest' then
       if _supplies > 0 and agent.spend(_PRICE['rest']) then
@@ -89,7 +89,7 @@ function Settlement:instance(_obj, _role)
         stage.gain(_PRICE['rest'])
         agent.done()
       else
-        agent.fail(0)
+        agent.fail(0, _obj)
       end
     end
   end

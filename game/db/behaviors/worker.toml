@@ -52,8 +52,18 @@ typename = "selector"
   
   [[tasks]]
   id = "rest"
-  typename = "rest"
+  typename = "sequence"
   parent = "default"
+
+    [[tasks]]
+    id = "has enough?"
+    typename = "hastreasure"
+    parent = "rest"
+
+    [[tasks]]
+    id = "go for it"
+    typename = "rest"
+    parent = "rest"
   
   [[tasks]]
   id = "giveup"
