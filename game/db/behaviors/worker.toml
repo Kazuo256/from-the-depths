@@ -71,29 +71,14 @@ typename = "selector"
   parent = "default"
 
     [[tasks]]
-    id = "solve issues"
-    typename = "selector"
+    id = "get rid"
+    typename = "drop"
     parent = "rest"
 
-      [[tasks]]
-      id = "get rid"
-      typename = "sequence"
-      parent = "solve issues"
-
-        [[tasks]]
-        id = "maybe"
-        typename = "supplied"
-        parent = "solve issues"
-
-        [[tasks]]
-        id = "finish"
-        typename = "sell"
-        parent = "solve issues"
-
-      [[tasks]]
-      id = "has enough?"
-      typename = "hastreasure"
-      parent = "solve issues"
+    [[tasks]]
+    id = "has enough?"
+    typename = "hastreasure"
+    parent = "rest"
 
     [[tasks]]
     id = "go for it"
