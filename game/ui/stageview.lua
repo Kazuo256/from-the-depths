@@ -19,6 +19,7 @@ function StageView:instance(_obj, _stage)
   local _SIDEBAR = DB.load('defs')['interface']['sidebar']
   local _RUINS = love.graphics.newImage("assets/textures/ruins.png")
   local _SETTLEMENT = love.graphics.newImage("assets/textures/settlement.png")
+  local _DEN = love.graphics.newImage("assets/textures/den.png")
   local _AGENTS = {
     worker = love.graphics.newImage("assets/textures/worker.png"),
     monster = love.graphics.newImage("assets/textures/monster.png")
@@ -122,8 +123,13 @@ function StageView:instance(_obj, _stage)
         end
         local settlement = map.getTileData(i, j, 'settlement')
         if settlement then
-          g.setColor(colors['tiffany-blue'])
-          g.draw(_SETTLEMENT, 0, 0)
+          if settlement.role() ~= 'den' then
+            g.setColor(colors['tiffany-blue'])
+            g.draw(_SETTLEMENT, 0, 0)
+          else
+            g.setColor(colors['dark-coral'])
+            g.draw(_DEN, 0, 0)
+          end
           if _current_settlement == settlement then
             local clicked = _clicked[settlement] or 0
             g.push()

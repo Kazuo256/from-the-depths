@@ -53,3 +53,11 @@ role = "rest"
 pos = [19, 8]
 role = "rest"
 
+[[settlements]]
+pos = [19, 19]
+role = "den"
+
+[[settlements]]
+pos = [7, 11]
+role = "den"
+
