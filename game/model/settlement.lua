@@ -76,6 +76,7 @@ function Settlement:instance(_obj, _role)
       if _supplies > 0 then
         agent.giveSupply()
         _supplies = _supplies - 1
+        agent.tire(_FATIGUE['collect'])
         agent.done()
       else
         agent.fail(_FATIGUE['lost-trip'], _obj)
@@ -93,7 +94,7 @@ function Settlement:instance(_obj, _role)
       end
     elseif _role == 'rest' and action == 'rest' then
       if _supplies >= 1 and agent.spend(_PRICE['rest']) then
-        agent.restore(60)
+        agent.restore(_FATIGUE['rest-amount'])
         _supplies = _supplies - 1
         stage.gain(_PRICE['rest'])
         agent.done()
