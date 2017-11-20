@@ -27,6 +27,7 @@ function Settlement:instance(_obj, _role)
   local _DELAY    = DB.load('defs')['gameplay']['spawn-delay']
   local _RATE     = DB.load('defs')['gameplay']['production-rate']
   local _PRICE    = DB.load('defs')['gameplay']['price']
+  local _FATIGUE  = DB.load('defs')['gameplay']['fatigue']
   local _MONSTER  = DB.load('defs')['gameplay']['monster']
 
   -- Agent spawning
@@ -77,7 +78,7 @@ function Settlement:instance(_obj, _role)
         _supplies = _supplies - 1
         agent.done()
       else
-        agent.fail(5, _obj)
+        agent.fail(_FATIGUE['lost-trip'], _obj)
       end
     elseif _role == 'rest' and action == 'sell' then
       if _demand > 0 and agent.hasSupply()
@@ -88,7 +89,7 @@ function Settlement:instance(_obj, _role)
         _demand = _demand - 1
         agent.done()
       else
-        agent.fail(10, _obj)
+        agent.fail(_FATIGUE['no-demand'], _obj)
       end
     elseif _role == 'rest' and action == 'rest' then
       if _supplies >= 1 and agent.spend(_PRICE['rest']) then
@@ -102,7 +103,7 @@ function Settlement:instance(_obj, _role)
     elseif _role == 'den' and action == 'scavenge' then
       agent.gain(_MONSTER['treasure-base'] +
                  math.floor(_MONSTER['treasure-range'] * love.math.random()))
-      agent.fail(50, _obj)
+      agent.tire(_FATIGUE['scavenge'])
       agent.done()
     elseif _role == 'den' and action == 'migrate' then
       agent.restore(200)

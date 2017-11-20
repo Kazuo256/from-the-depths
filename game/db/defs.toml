@@ -21,7 +21,7 @@ production-rate = 20
 delay-base = 50
 delay-range = 20
 
-treasure-base = 0
+treasure-base = 5
 treasure-range = 10
 
 [gameplay.price]
@@ -29,6 +29,12 @@ treasure-range = 10
 training = 200
 supply = 5
 rest = 10
+
+[gameplay.fatigue]
+
+lost-trip = 5
+no-demand = 10
+scavenge = 50
 
 [physics]
 
