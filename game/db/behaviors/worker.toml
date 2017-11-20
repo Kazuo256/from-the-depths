@@ -81,11 +81,6 @@ typename = "selector"
   parent = "default"
 
     [[tasks]]
-    id = "get rid"
-    typename = "drop"
-    parent = "rest"
-
-    [[tasks]]
     id = "has enough?"
     typename = "hastreasure"
     parent = "rest"

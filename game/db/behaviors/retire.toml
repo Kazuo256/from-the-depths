@@ -3,5 +3,14 @@ root = "default"
 
 [[tasks]]
 id = "default"
-typename = "retire"
+typename = "sequence"
 
+  [[tasks]]
+  id = "get rid"
+  typename = "drop"
+  parent = "default"
+
+  [[tasks]]
+  id = "go home"
+  typename = "retire"
+  parent = "default"
