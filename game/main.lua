@@ -91,18 +91,28 @@ local function _updateUI()
   if _selected then
     if _selected.__class == Settlement then
       _hud.text(2, "Settlement", 'HEAD')
-      _hud.text(2, _selected.role(), 'TEXT')
+      _hud.text(2, _selected.role(), 'TITLE')
       if _selected.role() == 'rest' or _selected.role() == 'harvest' then
-        _hud.text(2, "Supplies", 'TITLE')
-        _hud.text(2, _selected.supplies(), 'TEXT')
+        _hud.text(2, _selected.supplies() .. " supplies", 'TEXT')
         if _selected.role() == 'rest' then
-          _hud.text(2, "Demand", 'TITLE')
-          _hud.text(2, _selected.demand(), 'TEXT')
+          _hud.text(2, _selected.demand() .. " reqested", 'TEXT')
         end
       elseif _selected.role() == 'den' then
         _hud.text(2, "Next assault", 'TITLE')
         _hud.text(2, string.format("%.1f secs", _next_monster), 'TEXT')
       end
+      local black, white = 0, 0
+      for _,agent in _stage.eachAgent() do
+        if agent.specname() == 'worker' then
+          if agent.whitelisted(_selected) then
+            white = white + 1
+          elseif agent.blacklisted(_selected) then
+            black = black + 1
+          end
+        end
+      end
+      _hud.text(2, white .. " whitelisted", 'TEXT')
+      _hud.text(2, black .. " blacklisted", 'TEXT')
       local action = _selected.roleAction()
       if action then
         _hud.space(2)

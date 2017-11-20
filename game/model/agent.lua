@@ -16,6 +16,7 @@ function Agent:instance(_obj, _specname, _stage)
   setfenv(1, _obj)
 
   local _NEIGHBORS    = DB.load('defs')['gameplay']['neighbors']
+  local _TOLERANCE    = DB.load('defs')['gameplay']['tolerance']
   local _MAX_FATIGUE  = 100
   local _RETIRE       = Behavior('retire', _obj, _stage)
   local _DEFEND       = Behavior('defend', _obj, _stage)
@@ -31,7 +32,9 @@ function Agent:instance(_obj, _specname, _stage)
   local _pos      = vec2(0, 0)
 
   local _fatigue  = 0
-  local _last_failed = nil
+  local _log = {}
+  local _blacklist = {}
+  local _whitelist = {}
   local _retired  = false
 
   function fatigue()
@@ -104,18 +107,28 @@ function Agent:instance(_obj, _specname, _stage)
   local _target = nil
   local _status = nil
 
-  function done()
+  local function log(settlement, score)
+    local total = (_log[settlement] or 0) + score
+    _log[settlement] = total
+  end
+
+  function done(settlement)
     _status = 'done'
+    log(settlement, 1)
   end
 
   function fail(fatigue, settlement)
     _status = 'failed'
-    _last_failed = settlement
+    log(settlement, -1)
     tire(fatigue)
   end
 
-  function lastFailed()
-    return _last_failed
+  function whitelisted(settlement)
+    return (_log[settlement] or 0) >= _TOLERANCE
+  end
+
+  function blacklisted(settlement)
+    return (_log[settlement] or 0) <= -_TOLERANCE
   end
 
   function objective()

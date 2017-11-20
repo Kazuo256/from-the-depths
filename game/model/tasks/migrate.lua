@@ -8,7 +8,9 @@ local yield           = coroutine.yield
 function task.run(agent, stage, children)
   agent.setTarget()
   agent.setObjective('nothing')
-  local chosen = findsettlement(agent, stage, 'den')
+  local pi, pj = stage.map().point2pos(agent.pos())
+  local current = stage.map().getTileData(pi, pj, 'settlement')
+  local chosen = findsettlement(agent, stage, 'den', { [current or 1] = true })
   return seek(agent, stage, chosen, 'migrate')
 end
 

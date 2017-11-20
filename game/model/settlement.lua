@@ -77,7 +77,7 @@ function Settlement:instance(_obj, _role)
         agent.giveSupply()
         _supplies = _supplies - 1
         agent.tire(_FATIGUE['collect'])
-        agent.done()
+        agent.done(_obj)
       else
         agent.fail(_FATIGUE['lost-trip'], _obj)
       end
@@ -88,7 +88,7 @@ function Settlement:instance(_obj, _role)
         agent.gain(_PRICE['supply'])
         _supplies = _supplies + 1
         _demand = _demand - 1
-        agent.done()
+        agent.done(_obj)
       else
         agent.fail(_FATIGUE['no-demand'], _obj)
       end
@@ -97,7 +97,7 @@ function Settlement:instance(_obj, _role)
         agent.restore(_FATIGUE['rest-amount'])
         _supplies = _supplies - 1
         stage.gain(_PRICE['rest'])
-        agent.done()
+        agent.done(_obj)
       else
         agent.fail(0, _obj)
       end
@@ -105,20 +105,20 @@ function Settlement:instance(_obj, _role)
       agent.gain(_MONSTER['treasure-base'] +
                  math.floor(_MONSTER['treasure-range'] * love.math.random()))
       agent.tire(_FATIGUE['scavenge'])
-      agent.done()
+      agent.done(_obj)
     elseif _role == 'den' and action == 'migrate' then
       agent.restore(200)
       agent.fail(0, _obj)
-      agent.done()
+      agent.done(_obj)
     elseif _role == 'training' and action == 'retire' then
       agent.retire()
     elseif action == 'assault' then
       print("Assault succesfull")
       _supplies = 0
       agent.calmDown()
-      agent.done()
+      agent.done(_obj)
     elseif action == 'defend' then
-      agent.done()
+      agent.done(_obj)
     end
   end
 
