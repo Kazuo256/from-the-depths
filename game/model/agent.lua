@@ -185,7 +185,6 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function calmDown()
-    print(_specname, "has calmed down")
     _behavior = Behavior(_spec['behavior'], _obj, _stage)
   end
 

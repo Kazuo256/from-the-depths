@@ -9,6 +9,7 @@ typename = "selector"
   id = "defend"
   typename = "defend"
   parent = "default"
+  max-dist = 10
 
   [[tasks]]
   id = "this is fine"

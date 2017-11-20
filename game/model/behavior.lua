@@ -21,8 +21,12 @@ function Behavior:instance(_obj, _specname, _agent, _stage)
   for _,taskspec in ipairs(_spec['tasks']) do
     assert(not _tasks[taskspec['id']])
     local task = {}
-    task.run = TASKS[taskspec['typename']].run
+    task.run = function (agent, stage)
+      return TASKS[taskspec['typename']].run(agent, stage, task.children,
+                                             task.params)
+    end
     task.children = {}
+    task.params = {}
     local parent = taskspec['parent'] if parent then
       table.insert(_tasks[parent].children, task)
     end
@@ -32,7 +36,7 @@ function Behavior:instance(_obj, _specname, _agent, _stage)
   local function _routine(status)
     while true do
       local task = _tasks[_spec['root']]
-      task.run(_agent, _stage, task.children, status)
+      task.run(_agent, _stage)
     end
   end
 
