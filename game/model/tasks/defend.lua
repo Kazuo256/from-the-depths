@@ -9,7 +9,8 @@ function task.run(agent, stage, children, params)
   agent.setTarget()
   agent.setObjective('nothing')
   local chosen = findsettlement(agent, stage)
-  if chosen then
+  if chosen and (agent.specname() ~= 'worker' or
+                 agent.lastFailed() ~= chosen) then
     return seek(agent, stage, chosen, 'defend', params['max-dist'])
   else
     return false
