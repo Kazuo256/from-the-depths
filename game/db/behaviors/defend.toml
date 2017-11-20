@@ -1,0 +1,17 @@
+
+root = "default"
+
+[[tasks]]
+id = "default"
+typename = "selector"
+
+  [[tasks]]
+  id = "defend"
+  typename = "defend"
+  parent = "default"
+
+  [[tasks]]
+  id = "this is fine"
+  typename = "calmdown"
+  parent = "default"
+

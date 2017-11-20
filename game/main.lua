@@ -138,6 +138,11 @@ local function _checkMonster(dt)
     local monster = _stage.pickAgent('monster')
     monster.rampage()
     _resetMonster()
+    for _,agent in _stage.eachAgent() do
+      if agent.specname() == 'worker' then
+        agent.alert()
+      end
+    end
   end
 end
 

@@ -18,6 +18,7 @@ function Agent:instance(_obj, _specname, _stage)
   local _NEIGHBORS    = DB.load('defs')['gameplay']['neighbors']
   local _MAX_FATIGUE  = 100
   local _RETIRE       = Behavior('retire', _obj, _stage)
+  local _DEFEND       = Behavior('defend', _obj, _stage)
   local _ASSAULT      = Behavior('assault', _obj, _stage)
 
   local _spec     = DB.load('agents/' .. _specname)
@@ -171,6 +172,12 @@ function Agent:instance(_obj, _specname, _stage)
     end
   end
 
+  function alert()
+    if _specname == 'worker' then
+      _behavior = _DEFEND
+    end
+  end
+
   function rampage()
     if _specname == 'monster' then
       _behavior = _ASSAULT
@@ -178,6 +185,7 @@ function Agent:instance(_obj, _specname, _stage)
   end
 
   function calmDown()
+    print(_specname, "has calmed down")
     _behavior = Behavior(_spec['behavior'], _obj, _stage)
   end
 

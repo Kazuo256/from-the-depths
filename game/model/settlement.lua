@@ -114,6 +114,8 @@ function Settlement:instance(_obj, _role)
       _supplies = 0
       agent.calmDown()
       agent.done()
+    elseif action == 'defend' then
+      agent.done()
     end
   end
 
