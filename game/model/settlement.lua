@@ -92,7 +92,7 @@ function Settlement:instance(_obj, _role)
       end
     elseif _role == 'rest' and action == 'rest' then
       if _supplies >= 1 and agent.spend(_PRICE['rest']) then
-        agent.restore(40)
+        agent.restore(60)
         _supplies = _supplies - 1
         stage.gain(_PRICE['rest'])
         agent.done()
@@ -111,6 +111,7 @@ function Settlement:instance(_obj, _role)
     elseif _role == 'training' and action == 'retire' then
       agent.retire()
     elseif action == 'assault' then
+      print("Assault succesfull")
       _supplies = 0
       agent.calmDown()
       agent.done()
