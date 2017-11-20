@@ -3,5 +3,16 @@ root = "default"
 
 [[tasks]]
 id = "default"
-typename = "migrate"
+typename = "selector"
+
+  [[tasks]]
+  id = "protect"
+  typename = "defend"
+  max-dist = 5
+  parent = "default"
+
+  [[tasks]]
+  id = "migrate"
+  typename = "migrate"
+  parent = "default"
 
