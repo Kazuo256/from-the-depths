@@ -26,7 +26,7 @@ function Behavior:instance(_obj, _specname, _agent, _stage)
                                              task.params)
     end
     task.children = {}
-    task.params = {}
+    task.params = taskspec
     local parent = taskspec['parent'] if parent then
       table.insert(_tasks[parent].children, task)
     end

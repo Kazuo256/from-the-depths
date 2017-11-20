@@ -18,7 +18,7 @@ production-rate = 20
 [gameplay.monster]
 
 # Seconds
-delay-base = 30
+delay-base = 50
 delay-range = 20
 
 treasure-base = 10
