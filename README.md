@@ -46,5 +46,5 @@ love game
 ```
 
 On Windows, create a shortcut of the LÖVE executable in your desktop, then
-drag the "game" folder to it and release.
+drag nd drop the "game" folder on it.
 
