@@ -77,7 +77,7 @@ local function _updateUI()
       if _selected.role() == 'rest' or _selected.role() == 'harvest' then
         _hud.text(2, _selected.supplies() .. " supplies", 'TEXT')
         if _selected.role() == 'rest' then
-          _hud.text(2, _selected.demand() .. " reqested", 'TEXT')
+          _hud.text(2, _selected.demand() .. " requested", 'TEXT')
         end
       elseif _selected.role() == 'den' then
         _hud.text(2, "Next assault", 'TITLE')
