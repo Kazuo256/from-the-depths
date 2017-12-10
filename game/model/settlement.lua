@@ -113,7 +113,7 @@ function Settlement:instance(_obj, _role)
     elseif _role == 'training' and action == 'retire' then
       agent.retire()
     elseif action == 'assault' then
-      print("Assault succesfull")
+      print("Assault successful")
       _supplies = 0
       agent.calmDown()
       agent.done(_obj)
